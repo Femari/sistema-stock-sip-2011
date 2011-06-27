@@ -144,6 +144,7 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
         proceso.SetearPrioridadPedido(prioridad);
 
         parent.SiguientePaso(nroPaso);
+        
     }
     
     private void CargarComboClientes(){
