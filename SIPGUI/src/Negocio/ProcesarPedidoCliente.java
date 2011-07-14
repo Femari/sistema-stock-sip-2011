@@ -27,7 +27,7 @@ public class ProcesarPedidoCliente {
     /**
      * 4to paso UC:Procesar Pedido Cliente
      */
-    public Cliente IdentificarCliente(String cuit){
+    public Cliente IdentificarCliente(Long cuit){
         ClienteMapper clienteMapper = ClienteMapper.getInstancia();
 
         if (clienteMapper.existeCliente(cuit)){
@@ -171,4 +171,7 @@ public class ProcesarPedidoCliente {
         return PrioridadMapper.getInstancia().CargarTodos();
     }
 
+    public ArrayList<Producto> getProductos(){
+        return ProductoMapper.getInstancia().CargarTodos();
+    }
 }

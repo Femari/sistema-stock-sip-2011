@@ -18,7 +18,7 @@ public class ProveedorMapper {
 		
 	}
 	
-	public Proveedor Cargar(int cuit){
+	public Proveedor Cargar(long cuit){
 		try {
         	
         	PreparedStatement selectCliente;
@@ -53,7 +53,7 @@ public class ProveedorMapper {
 	private void MapearEntidad(Proveedor proveedor, ResultSet rs){
 		try {
 			rs.next();
-			proveedor.setCuit(rs.getInt("cuit"));
+			proveedor.setCuit(rs.getLong("cuit"));
 			proveedor.setDireccion(rs.getString("direccion"));
 			proveedor.setRazonSocial(rs.getString("nombre"));
 			proveedor.setCodigoPostal(rs.getString("codigoPostal"));
@@ -65,9 +65,9 @@ public class ProveedorMapper {
 		}
 	}
 	
-	static void MapearSelectPreparedStatement(int cuit, PreparedStatement preparedStatement) {
+	static void MapearSelectPreparedStatement(long cuit, PreparedStatement preparedStatement) {
         try {
-        	preparedStatement.setInt(1, cuit);
+        	preparedStatement.setLong(1, cuit);
         }catch(SQLException ex) {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
         }
@@ -91,7 +91,7 @@ public class ProveedorMapper {
 	/******* Validaciones *******************/
 	
 	
-	public boolean existeProveedor(int cuit){
+	public boolean existeProveedor(long cuit){
 		try {
         	
         	PreparedStatement selectProveedor;

@@ -2,7 +2,7 @@ package Negocio.Modelo;
 
 public class Proveedor {
 	//PrimaryKey
-	private int cuit;
+	private long cuit;
 
 	private String razonSocial;
 	private String direccion;
@@ -17,10 +17,10 @@ public class Proveedor {
 	public void setRazonSocial(String razonSocial) {
 		this.razonSocial = razonSocial;
 	}
-	public int getCuit() {
+	public long getCuit() {
 		return cuit;
 	}
-	public void setCuit(int cuit) {
+	public void setCuit(long cuit) {
 		this.cuit = cuit;
 	}
 	public int getTelefono() {

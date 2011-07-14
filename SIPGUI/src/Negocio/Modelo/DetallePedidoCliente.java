@@ -92,7 +92,7 @@ public class DetallePedidoCliente {
 	public Date calcularFechaEstimadaEntrega() {
 		Date date = new Date();
 		for(StockComprometidoDetallePedidoCliente comprometido: stockComprometido){
-			if(!comprometido.isEsComprometidoDeposito() && (comprometido.getPedidoProveedor().getFechaEntrega().compareTo(date) > 0)){	//Compromete stock de un pedido más futuro
+			if(!comprometido.isEsComprometidoDeposito() && (comprometido.getPedidoProveedor().getFechaEntrega().compareTo(date) > 0)){	//Compromete stock de un pedido mas futuro
 				date = comprometido.getPedidoProveedor().getFechaEntrega();
 			}
 		}

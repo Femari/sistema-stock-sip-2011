@@ -5,7 +5,7 @@ public class Producto {
 	private String codigo;
 	private Proveedor proveedor;
 	private double precioCompra;
-	private int stock;	
+	private int stockMinimo;	
 	private String descripcion;
 	
 	
@@ -33,11 +33,11 @@ public class Producto {
 	public void setPrecioCompra(double precioCompra) {
 		this.precioCompra = precioCompra;
 	}
-	public int getStock() {
-		return stock;
+	public int getStockMinimo() {
+		return stockMinimo;
 	}
-	public void setStock(int stock) {
-		this.stock = stock;
+	public void setStockMinimo(int stockMinimo) {
+		this.stockMinimo = stockMinimo;
 	}
 	public String getDescripcion() {
 		return descripcion;

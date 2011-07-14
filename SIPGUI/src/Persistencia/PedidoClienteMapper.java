@@ -74,7 +74,7 @@ public class PedidoClienteMapper {
 	
 	private static void MapearStatementInsert(PedidoCliente pedido, PreparedStatement statement) throws SQLException
 	{
-		statement.setInt(1, pedido.getCliente().getCuit());
+		statement.setLong(1, pedido.getCliente().getCuit());
 		statement.setInt(2, pedido.getEstado());
 		statement.setDate(3, new Date(pedido.getFechaPedido().getTime()));
 		statement.setDate(4, new Date(pedido.getFechaEntrega().getTime()));
