@@ -99,7 +99,7 @@ public class PedidoProveedorMapper {
 	
 	private static void MapearStatementInsert(PedidoProveedor pedido, PreparedStatement statement) throws SQLException
 	{
-		statement.setInt(1, pedido.getProveedor().getCuit());
+		statement.setLong(1, pedido.getProveedor().getCuit());
 		statement.setInt(2, pedido.getEstado());
 		statement.setDate(3, new Date(pedido.getFechaPedido().getTime()));
 		statement.setDate(4, new Date(pedido.getFechaEntrega().getTime()));
@@ -117,7 +117,7 @@ public class PedidoProveedorMapper {
 	}
 
 	private static void MapearEntidad(PedidoProveedor pedido, ResultSet rs) throws SQLException{
-		Proveedor proveedor = ProveedorMapper.getInstancia().Cargar(rs.getInt("Cuit"));
+		Proveedor proveedor = ProveedorMapper.getInstancia().Cargar(rs.getLong("Cuit"));
 
 		pedido.setNroPedido(rs.getInt("NroPedido"));
 		pedido.setProveedor(proveedor);

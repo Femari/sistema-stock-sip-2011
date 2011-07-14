@@ -62,7 +62,7 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
         cboClientes = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         cboPrioridad = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
 
@@ -77,11 +77,11 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
 
         cboPrioridad.setName("cboPrioridad"); // NOI18N
 
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnSiguiente.setText(resourceMap.getString("btnSiguiente.text")); // NOI18N
+        btnSiguiente.setName("btnSiguiente"); // NOI18N
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnSiguienteActionPerformed(evt);
             }
         });
 
@@ -101,7 +101,7 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
                 .addContainerGap(106, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(303, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnSiguiente)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -116,19 +116,19 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
                     .addComponent(jLabel2)
                     .addComponent(cboPrioridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnSiguiente)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
         this.SiguientePaso();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnSiguienteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSiguiente;
     private javax.swing.JComboBox cboClientes;
     private javax.swing.JComboBox cboPrioridad;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
@@ -137,8 +137,8 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
     // <editor-fold desc="Métodos de negocio">                          
     
     private void SiguientePaso(){
-        int cuit = ((ComboClienteItem)cboClientes.getSelectedItem()).getCuit();
-        this.proceso.IdentificarCliente(Integer.toString(cuit));
+        long cuit = ((ComboClienteItem)cboClientes.getSelectedItem()).getCuit();
+        this.proceso.IdentificarCliente(cuit);
 
         int prioridad = ((ComboPrioridadItem)cboPrioridad.getSelectedItem()).getNivel();
         proceso.SetearPrioridadPedido(prioridad);
@@ -167,7 +167,7 @@ public class pnlPPC_SeleccionClientePrioridad extends javax.swing.JPanel {
     class ComboClienteItem{
         private Cliente cliente;
         
-        public int getCuit(){
+        public long getCuit(){
             return cliente.getCuit();
         }
         

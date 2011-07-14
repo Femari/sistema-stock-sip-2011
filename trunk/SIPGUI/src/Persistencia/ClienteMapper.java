@@ -19,7 +19,7 @@ public class ClienteMapper {
 		
 	}
 	
-	public Cliente Cargar(String cuit){
+	public Cliente Cargar(long cuit){
 		try {
         	
         	PreparedStatement selectCliente;
@@ -54,7 +54,7 @@ public class ClienteMapper {
 	private boolean MapearEntidad(Cliente cliente, ResultSet rs){
             try {
                 if(rs.next()){
-                    cliente.setCuit(rs.getInt("cuit"));
+                    cliente.setCuit(rs.getLong("cuit"));
                     cliente.setDireccion(rs.getString("direccion"));
                     cliente.setNombre(rs.getString("nombre"));
                     cliente.setCodigoPostal(rs.getString("codigoPostal"));
@@ -71,9 +71,9 @@ public class ClienteMapper {
             return false;
 	}
 	
-	static void MapearSelectPreparedStatement(String cuit, PreparedStatement preparedStatement) {
+	static void MapearSelectPreparedStatement(long cuit, PreparedStatement preparedStatement) {
         try {
-        	preparedStatement.setString(1, cuit);
+        	preparedStatement.setString(1, Long.toString(cuit));
         }catch(SQLException ex) {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
         }
@@ -97,7 +97,7 @@ public class ClienteMapper {
 	/******* Validaciones *******************/
 	
 	
-	public boolean existeCliente(String cuit){
+	public boolean existeCliente(long cuit){
 		try {
         	
         	PreparedStatement selectCliente;
@@ -122,7 +122,7 @@ public class ClienteMapper {
         
         try {
             PreparedStatement selectCliente;
-            String sqlString = "SELECT * FROM Cliente";
+            String sqlString = "SELECT * FROM Cliente ORDER BY Nombre";
             selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
             Cliente cliente = new Cliente();

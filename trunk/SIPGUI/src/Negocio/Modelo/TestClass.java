@@ -23,7 +23,7 @@ public class TestClass {
 
         ProcesarPedidoCliente procesar = new ProcesarPedidoCliente();
         procesar.SetearPrioridadPedido(1);
-        procesar.IdentificarCliente("1");
+        procesar.IdentificarCliente((long)1);
 
         Producto producto1 = productoMapper.Cargar("PROD1");
         procesar.AgregarDetallePedidoCliente(producto1, 230);
@@ -46,7 +46,7 @@ public class TestClass {
     }
 
     private static void GrabarPedidoCliente(){
-        Cliente cliente = ClienteMapper.getInstancia().Cargar("1");
+        Cliente cliente = ClienteMapper.getInstancia().Cargar(1);
 
         PedidoCliente pedido = new PedidoCliente();
         pedido.setCliente(cliente);
@@ -115,7 +115,7 @@ public class TestClass {
     private static void CargarPedidoProveedor(){
         PedidoProveedor pedido = PedidoProveedorMapper.getInstancia().Cargar(7);
         System.out.println("Pedido cargado para Proveedor {1}, pedido el {2}, con {3} productos"
-                            .replace("{1}", Integer.toString(pedido.getProveedor().getCuit()))
+                            .replace("{1}", Long.toString(pedido.getProveedor().getCuit()))
                             .replace("{2}", pedido.getFechaPedido().toString())
                             .replace("{3}", Integer.toString(pedido.getArrayDetallePedidoProveedor().size())));
     }

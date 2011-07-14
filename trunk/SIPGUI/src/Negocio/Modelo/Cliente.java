@@ -1,12 +1,10 @@
 package Negocio.Modelo;
 public class Cliente {
 	//PrimaryKey
-    private int cuit;
-
-	private String nombre;
+    private long cuit;
+    private String nombre;
     private String direccion;
     private String codigoPostal;
-
     private int telefono;
     private int fax;
 	
@@ -16,10 +14,10 @@ public class Cliente {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public int getCuit() {
+	public long getCuit() {
 		return cuit;
 	}
-	public void setCuit(int cuit) {
+	public void setCuit(long cuit) {
 		this.cuit = cuit;
 	}
 	public String getDireccion() {
