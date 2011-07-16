@@ -138,7 +138,7 @@ public class MaterialesConsulta extends javax.swing.JPanel {
 
     public void setCompletarTabla(String codigo, String nombre) {
 
-        ArrayList<Producto> productos = new ProcesarProductos().getProductos();
+        ArrayList<Producto> productos = new ProcesarProductos().getProductos(codigo,nombre);
         Iterator<Producto> itrProd = productos.iterator();
         //Limpio la tabla
         this.limpiarTabla();
