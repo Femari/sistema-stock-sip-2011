@@ -39,6 +39,7 @@ public class pnlProcesarPedidoCliente extends javax.swing.JPanel {
         ArrayList<JPanel> pasos = new ArrayList<JPanel>();
         pasos.add(new pnlPPC_SeleccionClientePrioridad(this, proceso, 0));
         pasos.add(new pnlPPC_SeleccionProductosCantidad(this, proceso, 1));
+        pasos.add(new pnlPPC_DisponibilidadProductos(this, proceso, 2));
         
         panelesProceso = pasos;
         

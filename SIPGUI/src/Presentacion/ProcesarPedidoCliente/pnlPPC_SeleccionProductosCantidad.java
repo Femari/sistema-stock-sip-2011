@@ -41,7 +41,6 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
         CargarComboProductos();
         
         listModel = new DefaultListModel();
-        //listModel.addElement("Jane Doe");
         lstProductosAgregados.setModel(listModel);
         
     }
@@ -179,7 +178,7 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void SiguientePaso(){
-         //TODO: cargar el array de productos y cantidad
+        
         parent.SiguientePaso(nroPaso);
         
     }

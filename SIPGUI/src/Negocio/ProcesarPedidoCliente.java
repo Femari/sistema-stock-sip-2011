@@ -18,6 +18,10 @@ import java.util.List;
 
 public class ProcesarPedidoCliente {
     private PedidoCliente pedidoCliente = new PedidoCliente();
+
+    public PedidoCliente getPedidoCliente() {
+        return pedidoCliente;
+    }
 	
 	
     public void SetearPrioridadPedido(int prioridad){
@@ -50,7 +54,7 @@ public class ProcesarPedidoCliente {
 
     /**
      * 7mo Paso: Verificar la disponibilidad de stock actual y futuro para cada producto del pedidoActual
-     * @return Lista de DetalleDisponibilidadProducto con los productos con stock actual insuficiente
+     * @return Lista de DetalleDisponibilidadProducto
      */
     public ArrayList<DetalleDisponibilidadProducto> VerificarDisponibilidadProductos(){
         ProductoMapper mapper = ProductoMapper.getInstancia(); 
@@ -58,28 +62,41 @@ public class ProcesarPedidoCliente {
 
         for (DetallePedidoCliente sDetallePedidoCliente: pedidoCliente.getArrayDetallePedidoCliente()){
             Producto producto = sDetallePedidoCliente.getProducto();
-            int stockLibre = mapper.ObtenerStockLibre(producto);
+            DetalleDisponibilidadProducto detalleDisponibilidadProd;
+            int stockLibre = ObtenerStockLibreDeposito(producto);
 
             //si no alcanza
             if(stockLibre < sDetallePedidoCliente.getCantidad())
             {
                 //La cantidad solicitada a futuro es la diferencia entre el stockLibre y la cantidad solicitada del pedido
                 int cantidadSolicitadaFutura = sDetallePedidoCliente.getCantidad() - stockLibre;
-                DetalleDisponibilidadProducto detalleDisponibilidadProd = mapper.ObtenerDetallesDisponibilidadFutura(producto, cantidadSolicitadaFutura);
+                detalleDisponibilidadProd = mapper.ObtenerDetallesDisponibilidadFutura(producto, cantidadSolicitadaFutura);
 
-                arrayDetalleDisponibilidad.add(detalleDisponibilidadProd);
-
-                //maper pedidoProvedor, verificar pedidos pendientes, si estan ya comprometidos , y ver que me sobra de ese pedido.
                 // regla: siempre hay que usar primero los del stock real, y luego los de los pedidos por orden de fecha de llegada al deposito.
-                // ver si hay que hacer un nuevo pedido
-                // calcular fecha
-                // comprometer stock
-                //detalleDisponibilidadProd.
+                
             }
+            else // si es cubierto con el stock de deposito
+            { 
+                detalleDisponibilidadProd = new DetalleDisponibilidadProducto();
+                detalleDisponibilidadProd.setProducto(producto);
+                detalleDisponibilidadProd.setCantidadDisponible(stockLibre);
+                detalleDisponibilidadProd.setFecha(new java.util.Date()); //setea la fecha actual
+                detalleDisponibilidadProd.setCantidadSolicitada(sDetallePedidoCliente.getCantidad());
+            }
+            arrayDetalleDisponibilidad.add(detalleDisponibilidadProd);
         }
 
         return arrayDetalleDisponibilidad;
     }
+    
+    public int ObtenerStockLibreDeposito(Producto xProducto){
+        ProductoMapper mapper = ProductoMapper.getInstancia(); 
+        return mapper.ObtenerStockLibre(xProducto); //(deposito)
+    }
+    
+    
+    
+    
 
     /**
      * 8vo paso: Compromete stock futuro de un pedido a proveedor
@@ -162,7 +179,7 @@ public class ProcesarPedidoCliente {
 
         return null;
     }
-        
+    
     public ArrayList<Cliente> getClientes() {
         return ClienteMapper.getInstancia().CargarTodos();
     }
