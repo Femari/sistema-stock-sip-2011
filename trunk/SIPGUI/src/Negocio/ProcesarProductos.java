@@ -24,8 +24,8 @@ public class ProcesarProductos implements IProcesarProductos {
         return productos;
     }
 
-    public ArrayList<Producto> getProductos(String idProducto, String Descripcion) {
-        
+    public ArrayList<Producto> getProductos(String idProducto, String descripcion) {
+        productos = ProductoMapper.getInstancia().Cargar(idProducto, descripcion);
         return productos;
     }
 
