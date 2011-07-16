@@ -25,10 +25,10 @@ public class MaterialesConsulta extends javax.swing.JPanel {
 
     /** Creates new form MaterialesConsulta */
     private DefaultTableModel dtm;
-    private String[] columnas = {"codigo", "Nombre", "Descripcion", "Precio Compra", "Stock Minimo","Proveedor"};
-        
+    private String[] columnas = {"codigo", "Nombre", "Descripcion", "Precio Compra", "Stock Minimo", "Proveedor"};
+
     public MaterialesConsulta() {
-        dtm= new DefaultTableModel(columnas,0);
+        dtm = new DefaultTableModel(columnas, 0);
         initComponents();
     }
 
@@ -137,26 +137,21 @@ public class MaterialesConsulta extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public void setCompletarTabla(String codigo, String nombre) {
-        
+
         ArrayList<Producto> productos = new ProcesarProductos().getProductos();
         Iterator<Producto> itrProd = productos.iterator();
-        
         //Limpio la tabla
         this.limpiarTabla();
         //Agrego los productos encontrados a la tabla
         while (itrProd.hasNext()) {
             Producto producto = itrProd.next();
-            dtm.addRow(new Object[]{producto.getCodigo(), producto.getNombre(), producto.getDescripcion(), "$"+producto.getPrecioCompra(),producto.getStockMinimo(),producto.getProveedor().getRazonSocial()});
-            System.out.println("codigo:" + producto.getCodigo());
+            dtm.addRow(new Object[]{producto.getCodigo(), producto.getNombre(), producto.getDescripcion(), "$" + producto.getPrecioCompra(), producto.getStockMinimo(), producto.getProveedor().getRazonSocial()});
         }
-        
-
     }
-    
-    public void limpiarTabla(){
-        dtm.setRowCount(0);
-    } 
 
+    public void limpiarTabla() {
+        dtm.setRowCount(0);
+    }
     private void btnMaterialBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaterialBuscarActionPerformed
         if (txtMaterialCodigo.getText().isEmpty() && txtMaterialNombre.getText().isEmpty()) {
             JOptionPane.showConfirmDialog(this, "Debe ingresar al menos una opcion", "Error", JOptionPane.WARNING_MESSAGE);
