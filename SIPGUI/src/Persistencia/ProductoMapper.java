@@ -10,51 +10,58 @@ import Negocio.Modelo.Producto;
 import java.util.ArrayList;
 
 public class ProductoMapper {
-		
+
     private static ProductoMapper instanciaProductoMapper;
 
-    public static ProductoMapper getInstancia(){
-        if (instanciaProductoMapper == null){
-                instanciaProductoMapper = new ProductoMapper();
+    public static ProductoMapper getInstancia() {
+        if (instanciaProductoMapper == null) {
+            instanciaProductoMapper = new ProductoMapper();
         }
         return instanciaProductoMapper;
     }
 
-    private ProductoMapper(){
-
+    private ProductoMapper() {
     }
 
-
-    public Producto Cargar(String codigo){
+    public Producto Cargar(String codigo) {
         try {
 
-        PreparedStatement selectProducto;
-        //String sqlString = "SELECT Producto.IdProducto, descripcion, nombre, idProveedor, Cantidad, precioCompra FROM Producto INNER JOIN StockDeposito ON Producto.IdProducto = StockDeposito.IdProducto WHERE Producto.IdProducto = ?";
-        String sqlString = "SELECT * FROM Producto WHERE Producto.IdProducto = ?";
-        selectProducto = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
+            PreparedStatement selectProducto;
+            //String sqlString = "SELECT Producto.IdProducto, descripcion, nombre, idProveedor, Cantidad, precioCompra FROM Producto INNER JOIN StockDeposito ON Producto.IdProducto = StockDeposito.IdProducto WHERE Producto.IdProducto = ?";
+            String sqlString = "SELECT * FROM Producto WHERE Producto.IdProducto = ?";
+            selectProducto = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
-        MapearSelectPreparedStatement(codigo, selectProducto);
-        Producto producto = new Producto();
-        MapearEntidad(producto, selectProducto.executeQuery());
-        return producto;
+            MapearSelectPreparedStatement(codigo, selectProducto);
+            Producto producto = new Producto();
+            MapearEntidad(producto, selectProducto.executeQuery());
+            return producto;
 
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        }	
+        }
     }
-    //"SELECT * FROM Producto WHERE Producto.IdProducto LIKE '%?%' OR Producto.Descripcion LIKE '%?%'";
-    public ArrayList<Producto> Cargar(String idProducto,String descripcion) {
-        ArrayList<Producto> productos = new ArrayList<Producto>();
-        
-        try {
-            PreparedStatement selectCliente;
-            String sqlString = "SELECT * FROM Producto ORDER BY Nombre";
-            selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
+    public ArrayList<Producto> Cargar(String codigo, String descripcion) {
+        ArrayList<Producto> productos = new ArrayList<Producto>();
+
+        try {
+            PreparedStatement selectProductos;
+            String sqlString = "SELECT * FROM Producto WHERE ";
+            if (!codigo.isEmpty()) {
+                sqlString += "Producto.IdProducto LIKE '%" + codigo + "%' ";
+            }
+            if (!descripcion.isEmpty()) {
+                if (!codigo.isEmpty()) {
+                    sqlString += "OR ";
+                }
+                sqlString += "Producto.Descripcion LIKE '%" + descripcion + "%'";
+            }
+            System.out.println("Cargar con filtro:" + sqlString);
+            selectProductos = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
             Producto producto = new Producto();
-            ResultSet rs = selectCliente.executeQuery();
-            while(MapearEntidad(producto, rs)){
+            ResultSet rs = selectProductos.executeQuery();
+            while (MapearEntidad(producto, rs)) {
                 productos.add(producto);
                 producto = new Producto();
             }
@@ -62,13 +69,13 @@ public class ProductoMapper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return productos;
     }
-    
-     public ArrayList<Producto> CargarTodos() {
+
+    public ArrayList<Producto> CargarTodos() {
         ArrayList<Producto> productos = new ArrayList<Producto>();
-        
+
         try {
             PreparedStatement selectCliente;
             String sqlString = "SELECT * FROM Producto ORDER BY Nombre";
@@ -76,7 +83,7 @@ public class ProductoMapper {
 
             Producto producto = new Producto();
             ResultSet rs = selectCliente.executeQuery();
-            while(MapearEntidad(producto, rs)){
+            while (MapearEntidad(producto, rs)) {
                 productos.add(producto);
                 producto = new Producto();
             }
@@ -84,17 +91,17 @@ public class ProductoMapper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return productos;
     }
 
-    public void Modificar(Producto producto){
+    public void Modificar(Producto producto) {
         try {
             PreparedStatement updateProducto;
             String sqlString = "UPDATE Producto SET nombre = ? , descripcion = ? , idProveedor = ? , precioCompra = ?, stockMinimo = ? WHERE IdProducto = ?";
             updateProducto = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
-            MapearUpdatePreparedStatement( producto, updateProducto);
+            MapearUpdatePreparedStatement(producto, updateProducto);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,7 +113,7 @@ public class ProductoMapper {
      * @param producto a consultar stock
      * @return Cantidad de stock libre (puede ser negativo)
      */
-    public int ObtenerStockLibre(Producto producto)	{
+    public int ObtenerStockLibre(Producto producto) {
         try {
             PreparedStatement consultaStockLibre;
             String sqlString = "SELECT StockLibre FROM StockDepositoLibre WHERE IdProducto = ?";
@@ -116,10 +123,10 @@ public class ProductoMapper {
 
             ResultSet rs = consultaStockLibre.executeQuery();
             int stock = 0;
-            if(rs.next()){
+            if (rs.next()) {
                 stock = rs.getInt("StockLibre"); //Execute scalar
             }
-            
+
             rs.close();
             consultaStockLibre.close();
 
@@ -131,7 +138,7 @@ public class ProductoMapper {
         }
     }
 
-    public DetalleDisponibilidadProducto ObtenerDetallesDisponibilidadFutura(Producto producto, int cantidadSolicitada){
+    public DetalleDisponibilidadProducto ObtenerDetallesDisponibilidadFutura(Producto producto, int cantidadSolicitada) {
         try {
             PreparedStatement consultaStockLibre;
 
@@ -148,16 +155,14 @@ public class ProductoMapper {
             detalle.setProducto(producto);
             detalle.setCantidadSolicitada(cantidadSolicitada);
             ResultSet rs = consultaStockLibre.executeQuery();
-            if(rs.next()){
-            detalle.setCantidadDisponible(rs.getInt("StockLibre"));
-            detalle.setFecha(rs.getDate("FechaDisponibilidad"));
-            }
-            else
-            {
+            if (rs.next()) {
+                detalle.setCantidadDisponible(rs.getInt("StockLibre"));
+                detalle.setFecha(rs.getDate("FechaDisponibilidad"));
+            } else {
                 detalle.setCantidadDisponible(0);
                 detalle.setFecha(new java.util.Date());
-            }    
-            
+            }
+
             rs.close();
             consultaStockLibre.close();
 
@@ -169,33 +174,33 @@ public class ProductoMapper {
         }
     }
 
-    private boolean MapearEntidad(Producto producto, ResultSet rs){
+    private boolean MapearEntidad(Producto producto, ResultSet rs) {
         try {
-            if(rs.next()){
+            if (rs.next()) {
                 producto.setCodigo(rs.getString("IdProducto"));
                 producto.setNombre(rs.getString("nombre"));
                 producto.setDescripcion(rs.getString("descripcion"));
                 producto.setProveedor(ProveedorMapper.getInstancia().Cargar(rs.getLong("idProveedor")));
                 producto.setPrecioCompra(rs.getDouble("precioCompra"));
                 producto.setStockMinimo(rs.getInt("StockMinimo"));
-                
+
                 return true;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return false;
     }
 
     static void MapearSelectPreparedStatement(String codigo, PreparedStatement preparedStatement) {
         try {
             preparedStatement.setString(1, codigo);
-        }catch(SQLException ex) {
+        } catch (SQLException ex) {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
         }
-}
+    }
 
     static void MapearUpdatePreparedStatement(Producto producto, PreparedStatement preparedStatement) {
         try {
@@ -208,10 +213,8 @@ public class ProductoMapper {
 
             preparedStatement.executeUpdate();
 
-        }catch(SQLException ex) {
+        } catch (SQLException ex) {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
         }
     }
-	
-	
 }
