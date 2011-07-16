@@ -1,4 +1,5 @@
 package Negocio.Modelo;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DetalleDisponibilidadProducto {
@@ -43,11 +44,11 @@ public class DetalleDisponibilidadProducto {
 	{
 		if(cantidadSolicitada > cantidadDisponible)
 		{	//No existe stock a futuro
-			return "No disponible (Faltante al {DATE}: {CANTIDAD})".replace("{DATE}", fechaDisponibilidad.toString()).replace("{CANTIDAD}", Integer.toString(cantidadSolicitada - cantidadDisponible));
+			return "No disponible (Faltante al {DATE}: {CANTIDAD})".replace("{DATE}", new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidad)).replace("{CANTIDAD}", Integer.toString(cantidadSolicitada - cantidadDisponible));
 		}
 		else
 		{	//Existe stock a futuro
-			return "Stock disponible para el " + fechaDisponibilidad.toString();
+			return "Stock disponible para el " + new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidad);
 		}
 	}
 }

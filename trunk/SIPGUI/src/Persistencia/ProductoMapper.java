@@ -93,8 +93,11 @@ public class ProductoMapper {
             MapearSelectPreparedStatement(producto.getCodigo(), consultaStockLibre);
 
             ResultSet rs = consultaStockLibre.executeQuery();
-            rs.next(); int stock = rs.getInt("StockLibre"); //Execute scalar
-
+            int stock = 0;
+            if(rs.next()){
+                stock = rs.getInt("StockLibre"); //Execute scalar
+            }
+            
             rs.close();
             consultaStockLibre.close();
 
@@ -119,15 +122,20 @@ public class ProductoMapper {
             MapearSelectPreparedStatement(producto.getCodigo(), consultaStockLibre);
             consultaStockLibre.setInt(2, cantidadSolicitada);
 
-            ResultSet rs = consultaStockLibre.executeQuery();
-            rs.next();
-
             DetalleDisponibilidadProducto detalle = new DetalleDisponibilidadProducto();
             detalle.setProducto(producto);
+            detalle.setCantidadSolicitada(cantidadSolicitada);
+            ResultSet rs = consultaStockLibre.executeQuery();
+            if(rs.next()){
             detalle.setCantidadDisponible(rs.getInt("StockLibre"));
             detalle.setFecha(rs.getDate("FechaDisponibilidad"));
-            detalle.setCantidadSolicitada(cantidadSolicitada);
-
+            }
+            else
+            {
+                detalle.setCantidadDisponible(0);
+                detalle.setFecha(new java.util.Date());
+            }    
+            
             rs.close();
             consultaStockLibre.close();
 
