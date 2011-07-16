@@ -146,7 +146,7 @@ public class MaterialesConsulta extends javax.swing.JPanel {
         //Agrego los productos encontrados a la tabla
         while (itrProd.hasNext()) {
             Producto producto = itrProd.next();
-            dtm.addRow(new Object[]{producto.getCodigo(), producto.getNombre(), producto.getDescripcion(), producto.getPrecioCompra(),producto.getStockMinimo(),producto.getProveedor().getRazonSocial()});
+            dtm.addRow(new Object[]{producto.getCodigo(), producto.getNombre(), producto.getDescripcion(), "$"+producto.getPrecioCompra(),producto.getStockMinimo(),producto.getProveedor().getRazonSocial()});
             System.out.println("codigo:" + producto.getCodigo());
         }
         
