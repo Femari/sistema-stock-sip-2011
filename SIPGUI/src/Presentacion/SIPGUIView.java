@@ -4,6 +4,7 @@
 
 package Presentacion;
 
+import Presentacion.AbmMateriales.MaterialesConsulta;
 import Presentacion.ProcesarPedidoCliente.pnlProcesarPedidoCliente;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -109,8 +110,11 @@ public class SIPGUIView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mnuClienteNuevoPedido = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
+        mnuMateriales = new javax.swing.JMenu();
+        mnuMaterialesConsulta = new javax.swing.JMenuItem();
+        mnuMaterialesPlanifStock = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -137,15 +141,15 @@ public class SIPGUIView extends FrameView {
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
-        jMenuItem1.setLabel(resourceMap.getString("itmProcesarPedidoCliente.label")); // NOI18N
-        jMenuItem1.setName("itmProcesarPedidoCliente"); // NOI18N
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mnuClienteNuevoPedido.setLabel(resourceMap.getString("itmProcesarPedidoCliente.label")); // NOI18N
+        mnuClienteNuevoPedido.setName("itmProcesarPedidoCliente"); // NOI18N
+        mnuClienteNuevoPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mnuClienteNuevoPedidoActionPerformed(evt);
             }
         });
-        fileMenu.add(jMenuItem1);
-        jMenuItem1.getAccessibleContext().setAccessibleName(resourceMap.getString("jMenuItem1.AccessibleContext.accessibleName")); // NOI18N
+        fileMenu.add(mnuClienteNuevoPedido);
+        mnuClienteNuevoPedido.getAccessibleContext().setAccessibleName(resourceMap.getString("jMenuItem1.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(Presentacion.SIPGUIApp.class).getContext().getActionMap(SIPGUIView.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
@@ -153,6 +157,24 @@ public class SIPGUIView extends FrameView {
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
+
+        mnuMateriales.setText(resourceMap.getString("mnuMateriales.text")); // NOI18N
+        mnuMateriales.setName("mnuMateriales"); // NOI18N
+
+        mnuMaterialesConsulta.setText(resourceMap.getString("mnuMaterialesConsulta.text")); // NOI18N
+        mnuMaterialesConsulta.setName("mnuMaterialesConsulta"); // NOI18N
+        mnuMaterialesConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuMaterialesConsultaActionPerformed(evt);
+            }
+        });
+        mnuMateriales.add(mnuMaterialesConsulta);
+
+        mnuMaterialesPlanifStock.setText(resourceMap.getString("mnuMaterialesPlanifStock.text")); // NOI18N
+        mnuMaterialesPlanifStock.setName("mnuMaterialesPlanifStock"); // NOI18N
+        mnuMateriales.add(mnuMaterialesPlanifStock);
+
+        menuBar.add(mnuMateriales);
 
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
@@ -200,16 +222,25 @@ public class SIPGUIView extends FrameView {
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mnuClienteNuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuClienteNuevoPedidoActionPerformed
         mainPanel.add(new pnlProcesarPedidoCliente());
         System.out.println("Nuevo pedido cliente");
         mainPanel.revalidate(); //(sino no lo muestra)
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mnuClienteNuevoPedidoActionPerformed
+
+    private void mnuMaterialesConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMaterialesConsultaActionPerformed
+        mainPanel.add(new MaterialesConsulta());
+        System.out.println("ABM Materiales");
+        mainPanel.revalidate(); //(sino no lo muestra)
+    }//GEN-LAST:event_mnuMaterialesConsultaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem mnuClienteNuevoPedido;
+    private javax.swing.JMenu mnuMateriales;
+    private javax.swing.JMenuItem mnuMaterialesConsulta;
+    private javax.swing.JMenuItem mnuMaterialesPlanifStock;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
