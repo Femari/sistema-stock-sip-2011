@@ -65,7 +65,7 @@ public class DetallePedidoCliente {
 	 */
 	public void ComprometerStock(PedidoProveedor pedido, int cantidad)
 	{
-		DetallePedidoProveedor detalle = pedido.getDetalle(producto);
+            DetallePedido detalle = pedido.getDetalle(producto);
 		if(detalle != null){
 			StockComprometidoDetallePedidoCliente comprometido = new StockComprometidoDetallePedidoCliente();
 			comprometido.setCantidad(cantidad);

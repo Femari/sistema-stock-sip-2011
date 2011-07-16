@@ -95,7 +95,7 @@ public class TestClass {
         //detalle.setPrecioUnitario(producto.getPrecioCompra());
         detalle.setProducto(producto);
 
-        pedido.getArrayDetallePedidoProveedor().add(detalle);
+        pedido.getArrayDetallePedido().add(detalle);
 
         PedidoProveedorMapper.getInstancia().Grabar(pedido);
     }
@@ -117,6 +117,6 @@ public class TestClass {
         System.out.println("Pedido cargado para Proveedor {1}, pedido el {2}, con {3} productos"
                             .replace("{1}", Long.toString(pedido.getProveedor().getCuit()))
                             .replace("{2}", pedido.getFechaPedido().toString())
-                            .replace("{3}", Integer.toString(pedido.getArrayDetallePedidoProveedor().size())));
+                            .replace("{3}", Integer.toString(pedido.getArrayDetallePedido().size())));
     }
 }
