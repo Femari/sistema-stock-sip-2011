@@ -43,6 +43,28 @@ public class ProductoMapper {
             return null;
         }	
     }
+    //"SELECT * FROM Producto WHERE Producto.IdProducto LIKE '%?%' OR Producto.Descripcion LIKE '%?%'";
+    public ArrayList<Producto> Cargar(String idProducto,String descripcion) {
+        ArrayList<Producto> productos = new ArrayList<Producto>();
+        
+        try {
+            PreparedStatement selectCliente;
+            String sqlString = "SELECT * FROM Producto ORDER BY Nombre";
+            selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
+
+            Producto producto = new Producto();
+            ResultSet rs = selectCliente.executeQuery();
+            while(MapearEntidad(producto, rs)){
+                productos.add(producto);
+                producto = new Producto();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return productos;
+    }
     
      public ArrayList<Producto> CargarTodos() {
         ArrayList<Producto> productos = new ArrayList<Producto>();
