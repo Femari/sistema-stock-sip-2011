@@ -6,9 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import Negocio.Modelo.DetallePedidoCliente;
 import Negocio.Modelo.DetallePedidoProveedor;
-import Negocio.Modelo.PedidoCliente;
 import Negocio.Modelo.PedidoProveedor;
 import Negocio.Modelo.Producto;
 import Negocio.Modelo.Proveedor;
@@ -49,7 +47,7 @@ public class PedidoProveedorMapper {
 			rs.close(); statement.close();
 			
 			statement = ConexionManager.getInstancia().getConexion().prepareStatement(queryDetalle);
-			for(DetallePedidoProveedor detalle : pedido.getArrayDetallePedidoProveedor())
+			for(DetallePedidoProveedor detalle : pedido.getArrayDetallePedido())
 			{
 				MapearStatementInsert(pedido, detalle, statement);
 				statement.execute();
@@ -82,7 +80,7 @@ public class PedidoProveedorMapper {
 			statement = ConexionManager.getInstancia().getConexion().prepareStatement(queryDetalle);
 			MapearStatementSelect(nroPedido, statement);
 			
-			ArrayList<DetallePedidoProveedor> detalles = pedido.getArrayDetallePedidoProveedor();
+			ArrayList<DetallePedidoProveedor> detalles = pedido.getArrayDetallePedido();
 			rs = statement.executeQuery(); 
 			while(rs.next()){
 				DetallePedidoProveedor detalle = new DetallePedidoProveedor();
