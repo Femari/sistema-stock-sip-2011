@@ -147,7 +147,7 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
     public void CargarGrilla() {
         ArrayList<DetalleDisponibilidadProducto> arrayDetalleDisponibilidad = proceso.VerificarDisponibilidadProductos();
         
-        for (DetallePedidoCliente sDetallePedidoCliente: proceso.getPedidoCliente().getArrayDetallePedidoCliente()){
+        for (DetallePedidoCliente sDetallePedidoCliente: proceso.getPedidoCliente().getArrayDetallePedido()){
             
             tableModel.addRow(ArmarFila(sDetallePedidoCliente, arrayDetalleDisponibilidad));
         }
