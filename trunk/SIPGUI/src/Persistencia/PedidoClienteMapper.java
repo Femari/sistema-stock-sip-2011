@@ -46,14 +46,14 @@ public class PedidoClienteMapper {
 			rs.close(); statement.close();
 			
 			statement = ConexionManager.getInstancia().getConexion().prepareStatement(queryDetalle);
-			for(DetallePedidoCliente detalle : pedido.getArrayDetallePedidoCliente())
+			for(DetallePedidoCliente detalle : pedido.getArrayDetallePedido())
 			{
 				MapearStatementInsert(pedido, detalle, statement);
 				statement.execute();
 			}
 
 			statement = ConexionManager.getInstancia().getConexion().prepareStatement(queryStock);
-			for(DetallePedidoCliente detalle : pedido.getArrayDetallePedidoCliente())
+			for(DetallePedidoCliente detalle : pedido.getArrayDetallePedido())
 			{
 				for(StockComprometidoDetallePedidoCliente comprometido : detalle.getStockComprometido())
 				{

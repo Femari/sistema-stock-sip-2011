@@ -60,7 +60,7 @@ public class ProcesarPedidoCliente {
         ProductoMapper mapper = ProductoMapper.getInstancia(); 
         ArrayList<DetalleDisponibilidadProducto> arrayDetalleDisponibilidad = new ArrayList<DetalleDisponibilidadProducto>();
 
-        for (DetallePedidoCliente sDetallePedidoCliente: pedidoCliente.getArrayDetallePedidoCliente()){
+        for (DetallePedidoCliente sDetallePedidoCliente: pedidoCliente.getArrayDetallePedido()){
             Producto producto = sDetallePedidoCliente.getProducto();
             DetalleDisponibilidadProducto detalleDisponibilidadProd;
             int stockLibre = ObtenerStockLibreDeposito(producto);
@@ -140,7 +140,7 @@ public class ProcesarPedidoCliente {
     public String GrabarPedido()
     {
         String error = "";
-        for(DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedidoCliente())
+        for(DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedido())
         {
             if(!detalle.ValidarStockComprometido())
             {	//Valido que cada detalle haya comprometido todo el stock solicitado
@@ -171,7 +171,7 @@ public class ProcesarPedidoCliente {
      * @return Detalle para el producto indicado o null si no existe detalle alguno
      */
     private DetallePedidoCliente BuscarDetallePorProducto(Producto producto){
-        for(DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedidoCliente())
+        for(DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedido())
         {
             if(detalle.getProducto().equals(producto))
                 return detalle;

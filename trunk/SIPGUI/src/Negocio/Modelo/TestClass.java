@@ -64,7 +64,7 @@ public class TestClass {
         detalle.setPrecioUnitario(producto.getPrecioCompra());
         detalle.setProducto(producto);
 
-        pedido.getArrayDetallePedidoCliente().add(detalle);
+        pedido.getArrayDetallePedido().add(detalle);
 
         PedidoProveedor pedProv = new PedidoProveedor();
         pedProv.setNroPedido(5);

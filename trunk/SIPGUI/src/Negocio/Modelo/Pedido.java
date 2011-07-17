@@ -13,12 +13,12 @@ import java.util.Date;
  */
 public class Pedido {
 
-    private int nroPedido;
-    private Date fechaPedido;
-    private Date fechaEntrega;
-    private int estado;
-    private ArrayList<DetallePedido> arrayDetallePedido = new ArrayList<DetallePedido>();
-    private int total;
+    protected int nroPedido;
+    protected Date fechaPedido;
+    protected Date fechaEntrega;
+    protected int estado;
+    protected ArrayList<DetallePedido> arrayDetallePedido = new ArrayList<DetallePedido>();
+    protected int total;
 
     public Pedido() {
     }
