@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DetallePedidoCliente {
-	private Producto producto;
-	private int cantidad;
+public class DetallePedidoCliente extends DetallePedido {
 	private double precioUnitario;
 
 	/**
@@ -14,19 +12,15 @@ public class DetallePedidoCliente {
 	 */
 	private ArrayList<StockComprometidoDetallePedidoCliente> stockComprometido = new ArrayList<StockComprometidoDetallePedidoCliente>();
 	
-	public Producto getProducto() {
-		return producto;
-	}
+        
+        public DetallePedidoCliente(){
+            super();
+        }
+        
+    @Override
 	public void setProducto(Producto producto) {
 		this.producto = producto;
 		this.precioUnitario = producto.getPrecioCompra();
-	}
-	
-	public int getCantidad() {
-		return cantidad;
-	}
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
 	}
 	
 	public double getPrecioUnitario() {
