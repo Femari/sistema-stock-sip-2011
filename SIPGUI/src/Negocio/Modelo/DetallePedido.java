@@ -10,8 +10,8 @@ package Negocio.Modelo;
  */
 public class DetallePedido {
     
-    private int cantidad;
-    private Producto producto;
+    protected int cantidad;
+    protected Producto producto;
     
 
     public DetallePedido() {
