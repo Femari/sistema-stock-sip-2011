@@ -44,6 +44,13 @@ public class Cliente {
 	public void setFax(int fax) {
 		this.fax = fax;
 	}
+        
+        public boolean isEmpty(){
+            
+            return (this.codigoPostal.isEmpty() && this.cuit == 0 && 
+                    this.direccion.isEmpty() && this.fax == 0 && this.nombre.isEmpty() && 
+                    this.telefono == 0)?true:false;
+        }
 
     
 }

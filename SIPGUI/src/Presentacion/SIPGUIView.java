@@ -4,6 +4,7 @@
 
 package Presentacion;
 
+import Presentacion.AbmClientes.ClientesConsulta;
 import Presentacion.AbmMateriales.MaterialesConsulta;
 import Presentacion.ProcesarPedidoCliente.pnlProcesarPedidoCliente;
 import java.awt.BorderLayout;
@@ -111,6 +112,7 @@ public class SIPGUIView extends FrameView {
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         mnuClienteNuevoPedido = new javax.swing.JMenuItem();
+        mnuClienteAbm = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         mnuMateriales = new javax.swing.JMenu();
         mnuMaterialesConsulta = new javax.swing.JMenuItem();
@@ -140,6 +142,11 @@ public class SIPGUIView extends FrameView {
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(Presentacion.SIPGUIApp.class).getContext().getResourceMap(SIPGUIView.class);
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
+        fileMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileMenuActionPerformed(evt);
+            }
+        });
 
         mnuClienteNuevoPedido.setLabel(resourceMap.getString("itmProcesarPedidoCliente.label")); // NOI18N
         mnuClienteNuevoPedido.setName("itmProcesarPedidoCliente"); // NOI18N
@@ -150,6 +157,15 @@ public class SIPGUIView extends FrameView {
         });
         fileMenu.add(mnuClienteNuevoPedido);
         mnuClienteNuevoPedido.getAccessibleContext().setAccessibleName(resourceMap.getString("jMenuItem1.AccessibleContext.accessibleName")); // NOI18N
+
+        mnuClienteAbm.setText(resourceMap.getString("mnuClienteAbm.text")); // NOI18N
+        mnuClienteAbm.setName("mnuClienteAbm"); // NOI18N
+        mnuClienteAbm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuClienteAbmActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mnuClienteAbm);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(Presentacion.SIPGUIApp.class).getContext().getActionMap(SIPGUIView.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
@@ -234,9 +250,19 @@ public class SIPGUIView extends FrameView {
         mainPanel.revalidate(); //(sino no lo muestra)
     }//GEN-LAST:event_mnuMaterialesConsultaActionPerformed
 
+    private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
+        
+    }//GEN-LAST:event_fileMenuActionPerformed
+
+    private void mnuClienteAbmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuClienteAbmActionPerformed
+        mainPanel.add(new ClientesConsulta());
+        mainPanel.revalidate();
+    }//GEN-LAST:event_mnuClienteAbmActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem mnuClienteAbm;
     private javax.swing.JMenuItem mnuClienteNuevoPedido;
     private javax.swing.JMenu mnuMateriales;
     private javax.swing.JMenuItem mnuMaterialesConsulta;
