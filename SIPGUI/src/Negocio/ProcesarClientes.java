@@ -16,8 +16,6 @@ public class ProcesarClientes implements IProcesarClientes {
     
     private ArrayList<Cliente> clientes;
     private Cliente cliente;
-
-    
     
     public ArrayList<Cliente> getClientes() {
         return clientes = ClienteMapper.getInstancia().CargarTodos();
@@ -32,7 +30,7 @@ public class ProcesarClientes implements IProcesarClientes {
     }
 
     public void modificarCliente(Cliente ClienteActual, Cliente ClienteModificado) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ClienteMapper.getInstancia().Modificar(ClienteModificado);
     }
 
     public boolean existeCliente(Cliente cliente) {

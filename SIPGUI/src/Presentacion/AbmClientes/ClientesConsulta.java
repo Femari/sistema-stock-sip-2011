@@ -316,12 +316,9 @@ public class ClientesConsulta extends javax.swing.JPanel {
         cliente.setNombre(txtClienteNombre.getText());
         cliente.setDireccion(txtClienteDireccion.getText());
         cliente.setCodigoPostal(txtClienteCodPost.getText());
-        if (!txtClienteTelefono.getText().isEmpty()) {
-            cliente.setTelefono(Integer.parseInt(txtClienteTelefono.getText()));
-        }
-        if ((!txtClienteFax.getText().isEmpty())) {
-            cliente.setFax(Integer.parseInt(txtClienteFax.getText()));
-        }
+        cliente.setTelefono(txtClienteTelefono.getText());
+        cliente.setFax(txtClienteFax.getText());
+
     }
 
     private boolean validarEtapa() {
@@ -358,12 +355,12 @@ public class ClientesConsulta extends javax.swing.JPanel {
                     error = true;
                 }
                 
-                if (cliente.getTelefono() == 0) {
+                if (cliente.getTelefono().isEmpty()) {
                     message += "-El Telefono es un campo obligatorio.\n";
                     error = true;
                 }
                 
-                if (cliente.getFax() == 0) {
+                if (cliente.getFax().isEmpty()) {
                     message += "-El Fax es un campo obligatorio.\n";
                     error = true;
                 }
