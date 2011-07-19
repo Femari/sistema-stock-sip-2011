@@ -17,7 +17,7 @@ public class Pedido {
     protected Date fechaPedido;
     protected Date fechaEntrega;
     protected int estado;
-    protected ArrayList<DetallePedido> arrayDetallePedido = new ArrayList<DetallePedido>();
+    //protected ArrayList<DetallePedido> arrayDetallePedido = new ArrayList<DetallePedido>();
     protected int total;
 
     public Pedido() {
@@ -39,14 +39,14 @@ public class Pedido {
         return estado;
     }
 
-    public DetallePedido getDetalle(Producto producto) {
-        for (DetallePedido detalle : arrayDetallePedido) {
-            if (detalle.getProducto().equals(producto)) {
-                return detalle;
-            }
-        }
-        return null;
-    }
+//    public DetallePedido getDetalle(Producto producto) {
+//        for (DetallePedido detalle : arrayDetallePedido) {
+//            if (detalle.getProducto().equals(producto)) {
+//                return detalle;
+//            }
+//        }
+//        return null;
+//    }
 
     public int getTotal() {
         return total;

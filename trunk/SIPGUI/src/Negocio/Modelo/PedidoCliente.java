@@ -30,8 +30,7 @@ public class PedidoCliente extends Pedido {
         return arrayDetallePedidoCliente;
     }
 
-    public void setArrayDetallePedidoCliente(
-            ArrayList<DetallePedidoCliente> arrayDetallePedidoCliente) {
+    public void setArrayDetallePedidoCliente(ArrayList<DetallePedidoCliente> arrayDetallePedidoCliente) {
         this.arrayDetallePedidoCliente = arrayDetallePedidoCliente;
     }
 

@@ -25,7 +25,7 @@ public class MaterialesConsulta extends javax.swing.JPanel {
 
     /** Creates new form MaterialesConsulta */
     private DefaultTableModel dtm;
-    private String[] columnas = {"codigo", "Nombre", "Descripcion", "Precio Compra", "Stock Minimo", "Proveedor"};
+    private String[] columnas = {"codigo", "Nombre", "Descripcion", "Stock Minimo", "Proveedor"};
 
     public MaterialesConsulta() {
         dtm = new DefaultTableModel(columnas, 0);
@@ -148,7 +148,6 @@ public class MaterialesConsulta extends javax.swing.JPanel {
             dtm.addRow(new Object[]{producto.getCodigo(),
                         producto.getNombre(),
                         producto.getDescripcion(),
-                        "$" + producto.getPrecioCompra(),
                         producto.getStockMinimo(),
                         producto.getProveedor().getRazonSocial()
                     });

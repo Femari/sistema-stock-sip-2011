@@ -25,7 +25,7 @@ public class ProductoMapper {
         try {
 
             PreparedStatement selectProducto;
-            //String sqlString = "SELECT Producto.IdProducto, descripcion, nombre, idProveedor, Cantidad, precioCompra FROM Producto INNER JOIN StockDeposito ON Producto.IdProducto = StockDeposito.IdProducto WHERE Producto.IdProducto = ?";
+            //String sqlString = "SELECT Producto.IdProducto, descripcion, nombre, idProveedor, Cantidad FROM Producto INNER JOIN StockDeposito ON Producto.IdProducto = StockDeposito.IdProducto WHERE Producto.IdProducto = ?";
             String sqlString = "SELECT * FROM Producto WHERE Producto.IdProducto = ?";
             selectProducto = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
@@ -96,7 +96,7 @@ public class ProductoMapper {
     public void Modificar(Producto producto) {
         try {
             PreparedStatement updateProducto;
-            String sqlString = "UPDATE Producto SET nombre = ? , descripcion = ? , idProveedor = ? , precioCompra = ?, stockMinimo = ? WHERE IdProducto = ?";
+            String sqlString = "UPDATE Producto SET nombre = ? , descripcion = ? , idProveedor = ? , stockMinimo = ? WHERE IdProducto = ?";
             updateProducto = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
             MapearUpdatePreparedStatement(producto, updateProducto);
@@ -140,7 +140,7 @@ public class ProductoMapper {
         HashMap<Integer, StockLibrePorPedido> stockLibrePedidos = new HashMap<Integer, StockLibrePorPedido>();
         try {
             PreparedStatement consultaStockLibrePedidos;
-            String sqlString = "SELECT * FROM StockLibrePorPedido WHERE IdProducto = ?";
+            String sqlString = "SELECT * FROM StockLibrePorPedido WHERE IdProducto = ? ORDER BY FechaDisponibilidad";
             consultaStockLibrePedidos = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
 
             MapearSelectPreparedStatement(producto.getCodigo(), consultaStockLibrePedidos);
@@ -149,6 +149,7 @@ public class ProductoMapper {
             int i = 0;
             while (rs.next()) {
                 stockLibrePedidos.put(i, new StockLibrePorPedido(rs.getInt("NroPedido"), rs.getInt("StockLibre")));
+                i++;
             }
 
         } catch (SQLException e) {
@@ -212,7 +213,6 @@ public class ProductoMapper {
                 producto.setNombre(rs.getString("nombre"));
                 producto.setDescripcion(rs.getString("descripcion"));
                 producto.setProveedor(ProveedorMapper.getInstancia().Cargar(rs.getLong("idProveedor")));
-                producto.setPrecioCompra(rs.getDouble("precioCompra"));
                 producto.setStockMinimo(rs.getInt("StockMinimo"));
                 producto.setTiempoReposicion(rs.getInt("TiempoReposicion"));
 
@@ -239,10 +239,9 @@ public class ProductoMapper {
             preparedStatement.setString(1, producto.getNombre());
             preparedStatement.setString(2, producto.getDescripcion());
             preparedStatement.setLong(3, producto.getProveedor().getCuit());
-            preparedStatement.setDouble(4, producto.getPrecioCompra());
-            preparedStatement.setString(5, producto.getCodigo());
-            preparedStatement.setInt(6, producto.getStockMinimo());
-            preparedStatement.setInt(7, producto.getTiempoReposicion());
+            preparedStatement.setString(4, producto.getCodigo());
+            preparedStatement.setInt(5, producto.getStockMinimo());
+            preparedStatement.setInt(6, producto.getTiempoReposicion());
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
