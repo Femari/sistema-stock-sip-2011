@@ -53,7 +53,7 @@ public class TestClass {
         pedido.setFechaEntrega(new Date("2013/01/01"));
         pedido.setFechaPedido(new Date());
         pedido.setNroRemito(1);
-        pedido.setPrioridad(1);
+        //pedido.setPrioridad(1);
 
         ProductoMapper productoMapper = ProductoMapper.getInstancia();
         Producto producto = productoMapper.Cargar("1");

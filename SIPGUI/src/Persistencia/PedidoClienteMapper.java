@@ -73,7 +73,7 @@ public class PedidoClienteMapper {
         statement.setDate(3, new Date(pedido.getFechaPedido().getTime()));
         statement.setDate(4, new Date(pedido.getFechaEntrega().getTime()));
         statement.setInt(5, pedido.getNroRemito());
-        statement.setInt(6, pedido.getPrioridad());
+        statement.setInt(6, pedido.getPrioridad().getNivel());
     }
 
     private static void MapearStatementInsert(PedidoCliente pedido, DetallePedidoCliente detalle, PreparedStatement statement) throws SQLException {

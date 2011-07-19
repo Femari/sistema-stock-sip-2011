@@ -5,6 +5,7 @@ import Negocio.Modelo.DetalleDisponibilidadProducto;
 import Negocio.Modelo.Producto;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class ProductoMapper {
 
@@ -110,7 +111,7 @@ public class ProductoMapper {
      * @param producto a consultar stock
      * @return Cantidad de stock libre (puede ser negativo)
      */
-    public int ObtenerStockLibre(Producto producto) {
+    public int ObtenerStockLibreDeposito(Producto producto) {
         try {
             PreparedStatement consultaStockLibre;
             String sqlString = "SELECT StockLibre FROM StockDepositoLibre WHERE IdProducto = ?";
@@ -134,6 +135,29 @@ public class ProductoMapper {
             return 0;
         }
     }
+    
+    public HashMap<Integer, StockLibrePorPedido> ObtenerStockLibrePorPedido(Producto producto){
+        HashMap<Integer, StockLibrePorPedido> stockLibrePedidos = new HashMap<Integer, StockLibrePorPedido>();
+        try {
+            PreparedStatement consultaStockLibrePedidos;
+            String sqlString = "SELECT * FROM StockLibrePorPedido WHERE IdProducto = ?";
+            consultaStockLibrePedidos = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
+
+            MapearSelectPreparedStatement(producto.getCodigo(), consultaStockLibrePedidos);
+            
+            ResultSet rs = consultaStockLibrePedidos.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                stockLibrePedidos.put(i, new StockLibrePorPedido(rs.getInt("NroPedido"), rs.getInt("StockLibre")));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return stockLibrePedidos;
+    
+    }
 
     public DetalleDisponibilidadProducto ObtenerDetallesDisponibilidadFutura(Producto producto, int cantidadSolicitada) {
         try {
@@ -154,10 +178,10 @@ public class ProductoMapper {
             ResultSet rs = consultaStockLibre.executeQuery();
             if (rs.next()) {
                 detalle.setCantidadDisponible(rs.getInt("StockLibre"));
-                detalle.setFecha(rs.getDate("FechaDisponibilidad"));
+                detalle.setFechaDisponibilidad(rs.getDate("FechaDisponibilidad"));
             } else {
                 detalle.setCantidadDisponible(0);
-                detalle.setFecha(new java.util.Date());
+                detalle.setFechaDisponibilidad(new java.util.Date());
             }
 
             if (cantidadSolicitada > detalle.getCantidadDisponible()) {
@@ -225,4 +249,34 @@ public class ProductoMapper {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
         }
     }
+    
+    
+    public class StockLibrePorPedido{
+        private int nroPedido;
+        private int stockLibre;
+
+        public StockLibrePorPedido(int nroPedido, int stockLibre) {
+            this.nroPedido = nroPedido;
+            this.stockLibre = stockLibre;
+        }
+        
+        public int getNroPedido() {
+            return nroPedido;
+        }
+
+        public void setNroPedido(int nroPedido) {
+            this.nroPedido = nroPedido;
+        }
+
+        public int getStockLibre() {
+            return stockLibre;
+        }
+
+        public void setStockLibre(int stockLibre) {
+            this.stockLibre = stockLibre;
+        }
+        
+        
+    }
+    
 }

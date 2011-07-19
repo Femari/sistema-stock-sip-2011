@@ -1,6 +1,7 @@
 package Negocio.Modelo;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DetalleDisponibilidadProducto {
@@ -36,11 +37,11 @@ public class DetalleDisponibilidadProducto {
         this.cantidadSolicitada = cantidad;
     }
 
-    public Date getFecha() {
+    public Date getFechaDisponibilidad() {
         return fechaDisponibilidad;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFechaDisponibilidad(Date fecha) {
         this.fechaDisponibilidad = fecha;
     }
 
@@ -67,9 +68,21 @@ public class DetalleDisponibilidadProducto {
             return "Stock disponible para el " + new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidad);
         }
     }
-    
-    public String getDisponibilidadFaltante(){
-        if (cantidadSolicitada > cantidadDisponible){
+
+    public String getDescripcionEstado(Date fechaSolicitada) {
+        if (cantidadSolicitada > cantidadDisponible) {	//No hay suficiente stock a futuro
+            return "No disponible (Faltante al {DATE}: {CANTIDAD})".replace("{DATE}", new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidad)).replace("{CANTIDAD}", Integer.toString(cantidadSolicitada - cantidadDisponible));
+        } else {	//Existe stock a futuro
+            if (fechaSolicitada.compareTo(fechaDisponibilidad) >= 0) {
+                return "Stock disponible para el " + new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidad);
+            } else {
+                return "No disponible al {DATE}. Entrante el día {DATE2}".replace("{DATE}", new SimpleDateFormat("dd-MM-yyyy").format(fechaSolicitada)).replace("{DATE2}", new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidad));
+            }
+        }
+    }
+
+    public String getDisponibilidadFaltante() {
+        if (cantidadSolicitada > cantidadDisponible) {
             return "Faltante disponible al {DATE}".replace("{DATE}", new SimpleDateFormat("dd-MM-yyyy").format(fechaDisponibilidadNuevoPedido));
         } else {
             return "";

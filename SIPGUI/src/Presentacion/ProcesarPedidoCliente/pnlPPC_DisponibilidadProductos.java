@@ -14,18 +14,15 @@ import Negocio.Modelo.DetalleDisponibilidadProducto;
 import Negocio.Modelo.DetallePedidoCliente;
 import Negocio.Modelo.Producto;
 import Negocio.ProcesarPedidoCliente;
-import Persistencia.ProductoMapper;
 import Presentacion.SIPGUIView;
 import java.awt.Color;
 import java.awt.Component;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -63,11 +60,11 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Producto", "Cantidad", "Stock deposito", "Stock pedidos", "Disponibilidad"
+                "Producto", "Cantidad", "Stock deposito", "Stock pedidos", "Disponibilidad", "Disponibilidad faltante" 
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -85,12 +82,14 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         tblDetalleDisponibilidadActual.getColumnModel().getColumn(2).setPreferredWidth(30); //stock deposito
         tblDetalleDisponibilidadActual.getColumnModel().getColumn(3).setPreferredWidth(30); //stock pedidos
         tblDetalleDisponibilidadActual.getColumnModel().getColumn(4).setPreferredWidth(200); //disponibilidad
+        tblDetalleDisponibilidadActual.getColumnModel().getColumn(5).setPreferredWidth(200); //disponibilidad faltante
         
         tblDetalleDisponibilidadFutura.getColumnModel().getColumn(0).setPreferredWidth(120); //producto
         tblDetalleDisponibilidadFutura.getColumnModel().getColumn(1).setPreferredWidth(30); //cantidad
         tblDetalleDisponibilidadFutura.getColumnModel().getColumn(2).setPreferredWidth(30); //stock deposito
         tblDetalleDisponibilidadFutura.getColumnModel().getColumn(3).setPreferredWidth(30); //stock pedidos
         tblDetalleDisponibilidadFutura.getColumnModel().getColumn(4).setPreferredWidth(200); //disponibilidad
+        tblDetalleDisponibilidadActual.getColumnModel().getColumn(5).setPreferredWidth(200); //disponibilidad faltante
         
         this.proceso = proceso;
         this.parent = parent;
@@ -104,6 +103,7 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         
         if(visible){
             CargarGrilla();
+            lblFechaDisp1.setText(new SimpleDateFormat("dd-MM-yyyy").format(proceso.calcularFechaMinimaDisponibilidad()));
             SIPGUIView.getInstance().SeleccionarNumeroPaso(nroPaso);
         }
     }
@@ -158,17 +158,33 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
+        lblFechaDisp1.setFont(resourceMap.getFont("lblFechaDisp1.font")); // NOI18N
         lblFechaDisp1.setText(resourceMap.getString("lblFechaDisp1.text")); // NOI18N
         lblFechaDisp1.setName("lblFechaDisp1"); // NOI18N
 
         btnPasarAPedidoFuturo.setText(resourceMap.getString("btnPasarAPedidoFuturo.text")); // NOI18N
         btnPasarAPedidoFuturo.setName("btnPasarAPedidoFuturo"); // NOI18N
+        btnPasarAPedidoFuturo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPasarAPedidoFuturoActionPerformed(evt);
+            }
+        });
 
         btnEliminarItem.setText(resourceMap.getString("btnEliminarItem.text")); // NOI18N
         btnEliminarItem.setName("btnEliminarItem"); // NOI18N
+        btnEliminarItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarItemActionPerformed(evt);
+            }
+        });
 
         btnDividirPorDisponibilidad.setText(resourceMap.getString("btnDividirPorDisponibilidad.text")); // NOI18N
         btnDividirPorDisponibilidad.setName("btnDividirPorDisponibilidad"); // NOI18N
+        btnDividirPorDisponibilidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDividirPorDisponibilidadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -177,12 +193,12 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblFechaDisp1)
-                        .addGap(216, 216, 216)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 298, Short.MAX_VALUE)
                         .addComponent(btnDividirPorDisponibilidad, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnPasarAPedidoFuturo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -197,11 +213,11 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnPasarAPedidoFuturo)
                             .addComponent(btnEliminarItem))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(lblFechaDisp1)))
@@ -233,7 +249,7 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -258,12 +274,12 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(541, Short.MAX_VALUE)
-                .addComponent(btnSiguiente)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(635, Short.MAX_VALUE)
+                        .addComponent(btnSiguiente))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -279,6 +295,18 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
         this.SiguientePaso();
 }//GEN-LAST:event_btnSiguienteActionPerformed
+
+    private void btnEliminarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarItemActionPerformed
+        lblFechaDisp1.setText(new SimpleDateFormat("dd-MM-yyyy").format(proceso.calcularFechaMinimaDisponibilidad()));
+    }//GEN-LAST:event_btnEliminarItemActionPerformed
+
+    private void btnPasarAPedidoFuturoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPasarAPedidoFuturoActionPerformed
+        lblFechaDisp1.setText(new SimpleDateFormat("dd-MM-yyyy").format(proceso.calcularFechaMinimaDisponibilidad()));
+    }//GEN-LAST:event_btnPasarAPedidoFuturoActionPerformed
+
+    private void btnDividirPorDisponibilidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDividirPorDisponibilidadActionPerformed
+        lblFechaDisp1.setText(new SimpleDateFormat("dd-MM-yyyy").format(proceso.calcularFechaMinimaDisponibilidad()));
+    }//GEN-LAST:event_btnDividirPorDisponibilidadActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDividirPorDisponibilidad;
@@ -299,6 +327,11 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void SiguientePaso(){
+        proceso.ComprometerStock();
+        String error = proceso.GrabarPedido();
+        if (!error.equals("")){
+            System.out.println(error);
+        }
         parent.SiguientePaso(nroPaso);
         
     }
@@ -322,7 +355,13 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         if (colStockDeposito < colCantidad){
             colStockPedidos = xDetalleDisponibilidadProducto.getCantidadDisponible();
         }
-        String colDisponibilidad = xDetalleDisponibilidadProducto.getDescripcionEstado();
+        String colDisponibilidad = "";
+        if (proceso.getPedidoCliente().getPrioridad().getNivel() == 0){
+            colDisponibilidad = xDetalleDisponibilidadProducto.getDescripcionEstado();
+        }
+        else{
+            colDisponibilidad = xDetalleDisponibilidadProducto.getDescripcionEstado(proceso.getPedidoCliente().getPrioridad().calcularFechaEsperadaDeEntrega(new Date()));
+        }
         String colDisponibilidadFaltante = xDetalleDisponibilidadProducto.getDisponibilidadFaltante();
         
         
