@@ -1,13 +1,10 @@
 package Persistencia;
 
 import java.sql.*;
-import java.util.List;
-
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
-
 import Negocio.Modelo.DetalleDisponibilidadProducto;
 import Negocio.Modelo.Producto;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ProductoMapper {
 
@@ -163,6 +160,16 @@ public class ProductoMapper {
                 detalle.setFecha(new java.util.Date());
             }
 
+            if (cantidadSolicitada > detalle.getCantidadDisponible()) {
+                detalle.setCantidadFaltante(cantidadSolicitada - detalle.getCantidadDisponible());
+
+                Calendar fec = Calendar.getInstance();
+                fec.setTime(new java.util.Date());
+                fec.add(Calendar.DAY_OF_YEAR, producto.getTiempoReposicion() + 7); // se suma 7 para darle una semana de changui, ya que los pedidos a proveedor se realizan semanalmente
+
+                detalle.setFechaDisponibilidadNuevoPedido(fec.getTime());
+            }
+
             rs.close();
             consultaStockLibre.close();
 
@@ -183,6 +190,7 @@ public class ProductoMapper {
                 producto.setProveedor(ProveedorMapper.getInstancia().Cargar(rs.getLong("idProveedor")));
                 producto.setPrecioCompra(rs.getDouble("precioCompra"));
                 producto.setStockMinimo(rs.getInt("StockMinimo"));
+                producto.setTiempoReposicion(rs.getInt("TiempoReposicion"));
 
                 return true;
             }
@@ -210,7 +218,7 @@ public class ProductoMapper {
             preparedStatement.setDouble(4, producto.getPrecioCompra());
             preparedStatement.setString(5, producto.getCodigo());
             preparedStatement.setInt(6, producto.getStockMinimo());
-
+            preparedStatement.setInt(7, producto.getTiempoReposicion());
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {

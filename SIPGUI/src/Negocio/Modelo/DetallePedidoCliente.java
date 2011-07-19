@@ -47,7 +47,7 @@ public class DetallePedidoCliente extends DetallePedido {
 	{
 		StockComprometidoDetallePedidoCliente comprometido = new StockComprometidoDetallePedidoCliente();
 		comprometido.setCantidad(cantidad);
-		comprometido.setEsComprometidoDeposito(true);
+		comprometido.setTipoCompromiso(0);
 		
 		stockComprometido.add(comprometido);
 	}
@@ -63,7 +63,7 @@ public class DetallePedidoCliente extends DetallePedido {
 		if(detalle != null){
 			StockComprometidoDetallePedidoCliente comprometido = new StockComprometidoDetallePedidoCliente();
 			comprometido.setCantidad(cantidad);
-			comprometido.setEsComprometidoDeposito(false);
+			comprometido.setTipoCompromiso(1);
 			comprometido.setPedidoProveedor(pedido);
 			
 			stockComprometido.add(comprometido);
@@ -85,10 +85,16 @@ public class DetallePedidoCliente extends DetallePedido {
 	
 	public Date calcularFechaEstimadaEntrega() {
 		Date date = new Date();
+                //TODO: cambiar esto por la fecha estimada que tarda ese producto en entregarse si no esta pedido.
+                Date fechaPedidoNoRealizado = new Date(date.getYear(), date.getMonth() + 2, date.getDay());
 		for(StockComprometidoDetallePedidoCliente comprometido: stockComprometido){
-			if(!comprometido.isEsComprometidoDeposito() && (comprometido.getPedidoProveedor().getFechaEntrega().compareTo(date) > 0)){	//Compromete stock de un pedido mas futuro
+			if(comprometido.getTipoCompromiso() == 1  && (comprometido.getPedidoProveedor().getFechaEntrega().compareTo(date) > 0)){	//Compromete stock de un pedido mas futuro
 				date = comprometido.getPedidoProveedor().getFechaEntrega();
 			}
+                                //TODO: cambiar esto por la fecha estimada que tarda ese producto en entregarse si no esta pedido.
+                        else if (comprometido.getTipoCompromiso() == 2 && (date.compareTo(fechaPedidoNoRealizado) > 0)){
+                            date = fechaPedidoNoRealizado;
+                        }
 		}
 		
 		return date;
