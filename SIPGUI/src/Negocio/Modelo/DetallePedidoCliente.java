@@ -6,7 +6,6 @@ import java.util.List;
 
 public class DetallePedidoCliente extends DetallePedido {
 
-    private double precioUnitario;
     /**
      * Detalle de stock comprometido del deposito o de pedidos de proveedor
      */
@@ -14,20 +13,6 @@ public class DetallePedidoCliente extends DetallePedido {
 
     public DetallePedidoCliente() {
         super();
-    }
-
-    @Override
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-        this.precioUnitario = producto.getPrecioCompra();
-    }
-
-    public double getPrecioUnitario() {
-        return precioUnitario;
-    }
-
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
     }
 
     public List<StockComprometidoDetallePedidoCliente> getStockComprometido() {
@@ -56,7 +41,8 @@ public class DetallePedidoCliente extends DetallePedido {
      * @param cantidad
      */
     public void ComprometerStock(PedidoProveedor pedido, int cantidad) {
-        DetallePedido detalle = pedido.getDetalle(producto);
+        DetallePedidoProveedor detalle = pedido.getDetallePedidoProveedor(producto);
+        //DetallePedidoProveedor detalle = pedido.getDetalle(producto);
         if (detalle != null) {
             StockComprometidoDetallePedidoCliente comprometido = new StockComprometidoDetallePedidoCliente();
             comprometido.setCantidad(cantidad);

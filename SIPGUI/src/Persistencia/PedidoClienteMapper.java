@@ -25,7 +25,7 @@ public class PedidoClienteMapper {
 
     public void Grabar(PedidoCliente pedido) {
         String query = "INSERT INTO PedidoCliente(Cuit, Estado, FechaInicio, FechaEntrega, NroRemito, Prioridad) VALUES (?,?,?,?,?,?)";
-        String queryDetalle = "INSERT INTO DetallePedidoCliente(NroPedido, IdProducto, Cantidad, Precio) VALUES (?,?,?,?)";
+        String queryDetalle = "INSERT INTO DetallePedidoCliente(NroPedido, IdProducto, Cantidad) VALUES (?,?,?)";
         String queryStock = "INSERT INTO StockComprometidoDetallePedidoCliente(NroPedido, IdProducto, NroPedidoProveedor, CantidadComprometida, TipoCompromiso) VALUES (?,?,?,?,?)";
 
         PreparedStatement statement;
@@ -80,7 +80,6 @@ public class PedidoClienteMapper {
         statement.setInt(1, pedido.getNroPedido());
         statement.setString(2, detalle.getProducto().getCodigo());
         statement.setInt(3, detalle.getCantidad());
-        statement.setDouble(4, detalle.getPrecioUnitario());
     }
 
     private static void MapearStatementInsert(PedidoCliente pedido, DetallePedidoCliente detalle, StockComprometidoDetallePedidoCliente comprometido, PreparedStatement statement) throws SQLException {

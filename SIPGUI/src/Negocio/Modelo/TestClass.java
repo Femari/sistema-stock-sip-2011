@@ -60,7 +60,6 @@ public class TestClass {
 
         DetallePedidoCliente detalle = new DetallePedidoCliente();
         detalle.setCantidad(10);
-        detalle.setPrecioUnitario(producto.getPrecioCompra());
         detalle.setProducto(producto);
 
         pedido.getArrayDetallePedido().add(detalle);
@@ -106,7 +105,6 @@ public class TestClass {
         //producto.setCodigo("1");
         producto.setNombre("Bañaderas clase A TEST3");
         producto.setDescripcion("Bañaderas de Clase A TEST3");
-        producto.setPrecioCompra(119.50);
 
         productoMapper.Modificar(producto);
     }

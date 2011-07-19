@@ -145,6 +145,7 @@ public class ProcesarPedidoCliente {
                         if (stockLibrePedidos.get(i).getStockLibre() >= cantidadRestante) {
                             ComprometerStockPedidoProveedor(sDetallePedidoCliente.getProducto(), PedidoProveedorMapper.getInstancia().Cargar(stockLibrePedidos.get(i).getNroPedido()), cantidadRestante);
                             comprometidoTotalmente = true;
+                            break;
                         } else {
                             ComprometerStockPedidoProveedor(sDetallePedidoCliente.getProducto(), PedidoProveedorMapper.getInstancia().Cargar(stockLibrePedidos.get(i).getNroPedido()), stockLibrePedidos.get(i).getStockLibre());
                             cantidadRestante -= stockLibrePedidos.get(i).getStockLibre();
