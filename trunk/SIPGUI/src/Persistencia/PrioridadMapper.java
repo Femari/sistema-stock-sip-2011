@@ -45,6 +45,11 @@ public class PrioridadMapper {
     private void registrarPrioridad(Prioridad prioridad) {
         prioridades.put(prioridad.getNivel(), prioridad);
     }
+    
+    public Prioridad Cargar(int nivel){
+        return prioridades.get(nivel);
+    }
+    
 
     public ArrayList<Prioridad> CargarTodos() {
         return new ArrayList<Prioridad>(prioridades.values());

@@ -27,7 +27,7 @@ public class Prioridad {
     }
     
     
-    public Prioridad(int nivel, String descripcion, int tiempoEspera, int unidadEspera){
+    public Prioridad(int nivel, String descripcion, int unidadEspera, int tiempoEspera){
         this.nivel = nivel;
         this.descripcion = descripcion;
         this.tiempoEspera = tiempoEspera;

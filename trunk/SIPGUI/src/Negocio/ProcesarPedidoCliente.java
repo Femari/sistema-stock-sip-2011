@@ -12,8 +12,10 @@ import Negocio.Modelo.Prioridad;
 import Negocio.Modelo.Producto;
 import Persistencia.ClienteMapper;
 import Persistencia.PedidoClienteMapper;
+import Persistencia.PedidoProveedorMapper;
 import Persistencia.PrioridadMapper;
 import Persistencia.ProductoMapper;
+import java.util.HashMap;
 
 public class ProcesarPedidoCliente {
 
@@ -24,7 +26,8 @@ public class ProcesarPedidoCliente {
     }
 
     public void SetearPrioridadPedido(int prioridad) {
-        pedidoCliente.setPrioridad(prioridad);
+        PrioridadMapper prioridadMapper = PrioridadMapper.getInstancia();
+        pedidoCliente.setPrioridad(prioridadMapper.Cargar(prioridad));
     }
 
     /**
@@ -77,7 +80,7 @@ public class ProcesarPedidoCliente {
                 detalleDisponibilidadProd = new DetalleDisponibilidadProducto();
                 detalleDisponibilidadProd.setProducto(producto);
                 detalleDisponibilidadProd.setCantidadDisponible(stockLibre);
-                detalleDisponibilidadProd.setFecha(new java.util.Date()); //setea la fecha actual
+                detalleDisponibilidadProd.setFechaDisponibilidad(new java.util.Date()); //setea la fecha actual
                 detalleDisponibilidadProd.setCantidadSolicitada(sDetallePedidoCliente.getCantidad());
                 detalleDisponibilidadProd.setCantidadFaltante(0);
 
@@ -88,22 +91,88 @@ public class ProcesarPedidoCliente {
         return arrayDetalleDisponibilidad;
     }
 
+    public Date calcularFechaMinimaDisponibilidad() {
+        ArrayList<DetalleDisponibilidadProducto> arrayDetalleDisponibilidad = VerificarDisponibilidadProductos();
+        Date date = new Date();
+        for (DetalleDisponibilidadProducto detalle : arrayDetalleDisponibilidad) {
+            Date dateDetalle;
+            if (detalle.getCantidadFaltante() == 0) {
+                dateDetalle = detalle.getFechaDisponibilidad();
+            } else {
+                dateDetalle = detalle.getFechaDisponibilidadNuevoPedido();
+            }
+            date = (dateDetalle.compareTo(date) > 0 ? dateDetalle : date);
+        }
+        return date;
+    }
+
     public int ObtenerStockLibreDeposito(Producto xProducto) {
         ProductoMapper mapper = ProductoMapper.getInstancia();
-        return mapper.ObtenerStockLibre(xProducto); //(deposito)
+        return mapper.ObtenerStockLibreDeposito(xProducto);
+    }
+
+    public HashMap<Integer, ProductoMapper.StockLibrePorPedido> ObtenerStockLibrePorPedido(Producto xProducto) {
+        ProductoMapper mapper = ProductoMapper.getInstancia();
+        return mapper.ObtenerStockLibrePorPedido(xProducto);
+    }
+
+    public void ComprometerStock() {
+        int stockLibreDeposito = 0;
+        HashMap<Integer, ProductoMapper.StockLibrePorPedido> stockLibrePedidos = new HashMap<Integer, ProductoMapper.StockLibrePorPedido>();
+        int cantidadRestante = 0;
+        boolean comprometidoTotalmente = false;
+        for (DetallePedidoCliente sDetallePedidoCliente : pedidoCliente.getArrayDetallePedido()) {
+            comprometidoTotalmente = false;
+            cantidadRestante = sDetallePedidoCliente.getCantidad();
+
+            //COMPROMETE DEPOSITO
+            stockLibreDeposito = ObtenerStockLibreDeposito(sDetallePedidoCliente.getProducto());
+            if (stockLibreDeposito > 0) {
+                if (stockLibreDeposito >= cantidadRestante) {
+                    ComprometerStockDeposito(sDetallePedidoCliente.getProducto(), cantidadRestante);
+                    comprometidoTotalmente = true;
+                } else {
+                    ComprometerStockDeposito(sDetallePedidoCliente.getProducto(), stockLibreDeposito);
+                    cantidadRestante -= stockLibreDeposito;
+                }
+            }
+
+            //COMPROMETE PEDIDOS PENDIENTE DE ENTREGA
+            if (!comprometidoTotalmente) {
+                stockLibrePedidos = ObtenerStockLibrePorPedido(sDetallePedidoCliente.getProducto());
+                for (int i = 0; i < stockLibrePedidos.size(); i++) {
+                    if (stockLibrePedidos.get(i).getStockLibre() > 0) {
+                        if (stockLibrePedidos.get(i).getStockLibre() >= cantidadRestante) {
+                            ComprometerStockPedidoProveedor(sDetallePedidoCliente.getProducto(), PedidoProveedorMapper.getInstancia().Cargar(stockLibrePedidos.get(i).getNroPedido()), cantidadRestante);
+                            comprometidoTotalmente = true;
+                        } else {
+                            ComprometerStockPedidoProveedor(sDetallePedidoCliente.getProducto(), PedidoProveedorMapper.getInstancia().Cargar(stockLibrePedidos.get(i).getNroPedido()), stockLibrePedidos.get(i).getStockLibre());
+                            cantidadRestante -= stockLibrePedidos.get(i).getStockLibre();
+                        }
+                    }
+                }
+            }
+
+            //COMPROMETE PEDIDOS A FUTURO (NO REALIZADOS AUN)
+            if (!comprometidoTotalmente) {
+                ComprometerStockPedidoProveedorFuturo(sDetallePedidoCliente.getProducto(), cantidadRestante);
+            }
+
+        }
+
     }
 
     /**
-     * 8vo paso: Compromete stock futuro de un pedido a proveedor
+     * 8vo paso: Compromete stock de un pedido a proveedor pendiente de entrega
      * @param Producto del pedido
      * @param Pedido de proveedor a comprometer
      * @param Cantidad a comprometer del pedido a proveedor
      */
     public void ComprometerStockPedidoProveedor(Producto producto, PedidoProveedor pedido, int cantidad) {
         DetallePedidoCliente detalle = BuscarDetallePorProducto(producto);
-        if (detalle != null) {   //TODO: Agregar validacion de que todavia tenga stock para comprometer
+        if (detalle != null) {
             detalle.ComprometerStock(pedido, cantidad);
-        } else {   //TODO: Analizar si es necesario implementar un manejo de errores mas robusto
+        } else {
             System.err.println("El producto {1} no se encuentra registrado en el pedido actual.".replace("{1}", producto.getNombre()));
         }
     }
@@ -115,9 +184,23 @@ public class ProcesarPedidoCliente {
      */
     public void ComprometerStockDeposito(Producto producto, int cantidad) {
         DetallePedidoCliente detalle = BuscarDetallePorProducto(producto);
-        if (detalle != null) {   //TODO: Agregar validacion de que todavia tenga stock para comprometer
+        if (detalle != null) {
             detalle.ComprometerStock(cantidad);
-        } else {   //TODO: Analizar si es necesario implementar un manejo de errores mas robusto
+        } else {
+            System.err.println("El producto {1} no se encuentra registrado en el pedido actual.".replace("{1}", producto.getNombre()));
+        }
+    }
+
+    /**
+     * 8vo paso: Compromete stock disponible en deposito
+     * @param Producto del pedido
+     * @param Cantidad a comprometer
+     */
+    public void ComprometerStockPedidoProveedorFuturo(Producto producto, int cantidad) {
+        DetallePedidoCliente detalle = BuscarDetallePorProducto(producto);
+        if (detalle != null) {
+            detalle.ComprometerStockFuturo(cantidad);
+        } else {
             System.err.println("El producto {1} no se encuentra registrado en el pedido actual.".replace("{1}", producto.getNombre()));
         }
     }
@@ -147,7 +230,9 @@ public class ProcesarPedidoCliente {
     protected void CargarParametrosAutomaticosPedido() {
         pedidoCliente.setEstado(0); //pendiente
         pedidoCliente.setFechaPedido(new Date());
-        pedidoCliente.setFechaEntrega(pedidoCliente.calcularFechaEstimadaEntrega());	//TODO: Fecha de entrega del pedido tiene que poder ser definida por el cliente
+        //pedidoCliente.setFechaEntrega(pedidoCliente.calcularFechaEstimadaEntrega());	//TODO: Fecha de entrega del pedido tiene que poder ser definida por el cliente
+        pedidoCliente.setFechaEntrega(calcularFechaMinimaDisponibilidad());
+
     }
 
     /**
