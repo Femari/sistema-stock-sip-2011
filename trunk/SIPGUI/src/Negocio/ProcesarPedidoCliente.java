@@ -14,30 +14,29 @@ import Persistencia.ClienteMapper;
 import Persistencia.PedidoClienteMapper;
 import Persistencia.PrioridadMapper;
 import Persistencia.ProductoMapper;
-import java.util.List;
 
 public class ProcesarPedidoCliente {
+
     private PedidoCliente pedidoCliente = new PedidoCliente();
 
     public PedidoCliente getPedidoCliente() {
         return pedidoCliente;
     }
-	
-	
-    public void SetearPrioridadPedido(int prioridad){
+
+    public void SetearPrioridadPedido(int prioridad) {
         pedidoCliente.setPrioridad(prioridad);
     }
-	
+
     /**
      * 4to paso UC:Procesar Pedido Cliente
      */
-    public Cliente IdentificarCliente(Long cuit){
+    public Cliente IdentificarCliente(Long cuit) {
         ClienteMapper clienteMapper = ClienteMapper.getInstancia();
 
-        if (clienteMapper.existeCliente(cuit)){
+        if (clienteMapper.existeCliente(cuit)) {
             pedidoCliente.setCliente(clienteMapper.Cargar(cuit));
             return pedidoCliente.getCliente();
-        }else{
+        } else {
             return null;
         }
     }
@@ -45,7 +44,7 @@ public class ProcesarPedidoCliente {
     /**
      * 6to paso UC:Procesar Pedido Cliente
      */
-    public void AgregarDetallePedidoCliente(Producto producto, int cantidad){
+    public void AgregarDetallePedidoCliente(Producto producto, int cantidad) {
         DetallePedidoCliente detallePedidoCliente = new DetallePedidoCliente();
         detallePedidoCliente.setProducto(producto);
         detallePedidoCliente.setCantidad(cantidad);
@@ -56,47 +55,43 @@ public class ProcesarPedidoCliente {
      * 7mo Paso: Verificar la disponibilidad de stock actual y futuro para cada producto del pedidoActual
      * @return Lista de DetalleDisponibilidadProducto
      */
-    public ArrayList<DetalleDisponibilidadProducto> VerificarDisponibilidadProductos(){
-        ProductoMapper mapper = ProductoMapper.getInstancia(); 
+    public ArrayList<DetalleDisponibilidadProducto> VerificarDisponibilidadProductos() {
+        ProductoMapper mapper = ProductoMapper.getInstancia();
         ArrayList<DetalleDisponibilidadProducto> arrayDetalleDisponibilidad = new ArrayList<DetalleDisponibilidadProducto>();
 
-        for (DetallePedidoCliente sDetallePedidoCliente: pedidoCliente.getArrayDetallePedido()){
+        for (DetallePedidoCliente sDetallePedidoCliente : pedidoCliente.getArrayDetallePedido()) {
             Producto producto = sDetallePedidoCliente.getProducto();
             DetalleDisponibilidadProducto detalleDisponibilidadProd;
             int stockLibre = ObtenerStockLibreDeposito(producto);
 
-            //si no alcanza
-            if(stockLibre < sDetallePedidoCliente.getCantidad())
-            {
-                //La cantidad solicitada a futuro es la diferencia entre el stockLibre y la cantidad solicitada del pedido
+            //si no alcanza con el stock q hay en deposito:
+            if (stockLibre < sDetallePedidoCliente.getCantidad()) {
+                //La cantidad solicitada a futuro es la diferencia entre el stockLibre de depósito y la cantidad solicitada del pedido
                 int cantidadSolicitadaFutura = sDetallePedidoCliente.getCantidad() - stockLibre;
                 detalleDisponibilidadProd = mapper.ObtenerDetallesDisponibilidadFutura(producto, cantidadSolicitadaFutura);
 
                 // regla: siempre hay que usar primero los del stock real, y luego los de los pedidos por orden de fecha de llegada al deposito.
-                
-            }
-            else // si es cubierto con el stock de deposito
-            { 
+
+            } else // si es cubierto con el stock de deposito
+            {
                 detalleDisponibilidadProd = new DetalleDisponibilidadProducto();
                 detalleDisponibilidadProd.setProducto(producto);
                 detalleDisponibilidadProd.setCantidadDisponible(stockLibre);
                 detalleDisponibilidadProd.setFecha(new java.util.Date()); //setea la fecha actual
                 detalleDisponibilidadProd.setCantidadSolicitada(sDetallePedidoCliente.getCantidad());
+                detalleDisponibilidadProd.setCantidadFaltante(0);
+
             }
             arrayDetalleDisponibilidad.add(detalleDisponibilidadProd);
         }
 
         return arrayDetalleDisponibilidad;
     }
-    
-    public int ObtenerStockLibreDeposito(Producto xProducto){
-        ProductoMapper mapper = ProductoMapper.getInstancia(); 
+
+    public int ObtenerStockLibreDeposito(Producto xProducto) {
+        ProductoMapper mapper = ProductoMapper.getInstancia();
         return mapper.ObtenerStockLibre(xProducto); //(deposito)
     }
-    
-    
-    
-    
 
     /**
      * 8vo paso: Compromete stock futuro de un pedido a proveedor
@@ -104,14 +99,11 @@ public class ProcesarPedidoCliente {
      * @param Pedido de proveedor a comprometer
      * @param Cantidad a comprometer del pedido a proveedor
      */
-    public void ComprometerStockPedidoProveedor(Producto producto, PedidoProveedor pedido, int cantidad){
+    public void ComprometerStockPedidoProveedor(Producto producto, PedidoProveedor pedido, int cantidad) {
         DetallePedidoCliente detalle = BuscarDetallePorProducto(producto);
-        if(detalle != null)
-        {   //TODO: Agregar validacion de que todavia tenga stock para comprometer
+        if (detalle != null) {   //TODO: Agregar validacion de que todavia tenga stock para comprometer
             detalle.ComprometerStock(pedido, cantidad);
-        }
-        else
-        {   //TODO: Analizar si es necesario implementar un manejo de errores mas robusto
+        } else {   //TODO: Analizar si es necesario implementar un manejo de errores mas robusto
             System.err.println("El producto {1} no se encuentra registrado en el pedido actual.".replace("{1}", producto.getNombre()));
         }
     }
@@ -121,14 +113,11 @@ public class ProcesarPedidoCliente {
      * @param Producto del pedido
      * @param Cantidad a comprometer del deposito
      */
-    public void ComprometerStockDeposito(Producto producto, int cantidad){
+    public void ComprometerStockDeposito(Producto producto, int cantidad) {
         DetallePedidoCliente detalle = BuscarDetallePorProducto(producto);
-        if(detalle != null)
-        {   //TODO: Agregar validacion de que todavia tenga stock para comprometer
+        if (detalle != null) {   //TODO: Agregar validacion de que todavia tenga stock para comprometer
             detalle.ComprometerStock(cantidad);
-        }
-        else
-        {   //TODO: Analizar si es necesario implementar un manejo de errores mas robusto
+        } else {   //TODO: Analizar si es necesario implementar un manejo de errores mas robusto
             System.err.println("El producto {1} no se encuentra registrado en el pedido actual.".replace("{1}", producto.getNombre()));
         }
     }
@@ -137,19 +126,15 @@ public class ProcesarPedidoCliente {
      * 9no paso: Valida el pedido y lo persiste a la base de datos
      * @return Detalle de errores en caso de que hayan surgido o string vacio si esta todo ok
      */
-    public String GrabarPedido()
-    {
+    public String GrabarPedido() {
         String error = "";
-        for(DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedido())
-        {
-            if(!detalle.ValidarStockComprometido())
-            {	//Valido que cada detalle haya comprometido todo el stock solicitado
+        for (DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedido()) {
+            if (!detalle.ValidarStockComprometido()) {	//Valido que cada detalle haya comprometido todo el stock solicitado
                 error += "Falta comprometer stock para el producto {1}.\n".replace("{1}", detalle.getProducto().getNombre());
             }
         }
 
-        if(error == "")
-        {
+        if (error.equals("")) {
             CargarParametrosAutomaticosPedido();
 
             PedidoClienteMapper mapper = PedidoClienteMapper.getInstancia();
@@ -170,16 +155,16 @@ public class ProcesarPedidoCliente {
      * @param Producto por el cual buscar el detalle
      * @return Detalle para el producto indicado o null si no existe detalle alguno
      */
-    private DetallePedidoCliente BuscarDetallePorProducto(Producto producto){
-        for(DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedido())
-        {
-            if(detalle.getProducto().equals(producto))
+    private DetallePedidoCliente BuscarDetallePorProducto(Producto producto) {
+        for (DetallePedidoCliente detalle : pedidoCliente.getArrayDetallePedido()) {
+            if (detalle.getProducto().equals(producto)) {
                 return detalle;
+            }
         }
 
         return null;
     }
-    
+
     public ArrayList<Cliente> getClientes() {
         return ClienteMapper.getInstancia().CargarTodos();
     }
@@ -188,7 +173,7 @@ public class ProcesarPedidoCliente {
         return PrioridadMapper.getInstancia().CargarTodos();
     }
 
-    public ArrayList<Producto> getProductos(){
+    public ArrayList<Producto> getProductos() {
         return ProductoMapper.getInstancia().CargarTodos();
     }
 }

@@ -10,20 +10,20 @@ import Persistencia.ProductoMapper;
 import Persistencia.ProveedorMapper;
 
 public class TestClass {
-	
-    public static void main(String args[]){
+
+    public static void main(String args[]) {
         PruebaProcesarPedidoCliente();
         //GrabarPedidoCliente();
         //CargarPedidoProveedor();
         //GrabarPedidoProveedor();
     }
 
-    private static void PruebaProcesarPedidoCliente(){
+    private static void PruebaProcesarPedidoCliente() {
         ProductoMapper productoMapper = ProductoMapper.getInstancia();
 
         ProcesarPedidoCliente procesar = new ProcesarPedidoCliente();
         procesar.SetearPrioridadPedido(1);
-        procesar.IdentificarCliente((long)1);
+        procesar.IdentificarCliente((long) 1);
 
         Producto producto1 = productoMapper.Cargar("PROD1");
         procesar.AgregarDetallePedidoCliente(producto1, 230);
@@ -31,9 +31,8 @@ public class TestClass {
         Producto producto2 = productoMapper.Cargar("PROD2");
         procesar.AgregarDetallePedidoCliente(producto2, 150);
 
-        for(DetalleDisponibilidadProducto detalle : procesar.VerificarDisponibilidadProductos())
-        {//Imprimo el detalle de los productos que estan faltando, y la fecha para la que existe stock a futuro 
-            System.out.println(detalle.getProducto().getNombre() +" - " + detalle.getDescripcionEstado());
+        for (DetalleDisponibilidadProducto detalle : procesar.VerificarDisponibilidadProductos()) {//Imprimo el detalle de los productos que estan faltando, y la fecha para la que existe stock a futuro 
+            System.out.println(detalle.getProducto().getNombre() + " - " + detalle.getDescripcionEstado());
         }
 
         PedidoProveedor pedido = PedidoProveedorMapper.getInstancia().Cargar(7);
@@ -45,7 +44,7 @@ public class TestClass {
         System.out.println(procesar.GrabarPedido());
     }
 
-    private static void GrabarPedidoCliente(){
+    private static void GrabarPedidoCliente() {
         Cliente cliente = ClienteMapper.getInstancia().Cargar(1);
 
         PedidoCliente pedido = new PedidoCliente();
@@ -72,13 +71,13 @@ public class TestClass {
         StockComprometidoDetallePedidoCliente comprometido = new StockComprometidoDetallePedidoCliente();
         detalle.getStockComprometido().add(comprometido);
         comprometido.setCantidad(10);
-        comprometido.setEsComprometidoDeposito(false);
+        comprometido.setTipoCompromiso(1);
         comprometido.setPedidoProveedor(pedProv);
 
         PedidoClienteMapper.getInstancia().Grabar(pedido);
     }
 
-    private static void GrabarPedidoProveedor(){
+    private static void GrabarPedidoProveedor() {
         Proveedor proveedor = ProveedorMapper.getInstancia().Cargar(1);
 
         PedidoProveedor pedido = new PedidoProveedor();
@@ -100,23 +99,20 @@ public class TestClass {
         PedidoProveedorMapper.getInstancia().Grabar(pedido);
     }
 
-    private static void ModificarProducto(){
+    private static void ModificarProducto() {
         ProductoMapper productoMapper = ProductoMapper.getInstancia();
         Producto producto = productoMapper.Cargar("1");
 
         //producto.setCodigo("1");
-        producto.setNombre("Ba�aderas clase A TEST3");
-        producto.setDescripcion("Ba�aderas de Clase A TEST3");
+        producto.setNombre("Bañaderas clase A TEST3");
+        producto.setDescripcion("Bañaderas de Clase A TEST3");
         producto.setPrecioCompra(119.50);
 
         productoMapper.Modificar(producto);
     }
 
-    private static void CargarPedidoProveedor(){
+    private static void CargarPedidoProveedor() {
         PedidoProveedor pedido = PedidoProveedorMapper.getInstancia().Cargar(7);
-        System.out.println("Pedido cargado para Proveedor {1}, pedido el {2}, con {3} productos"
-                            .replace("{1}", Long.toString(pedido.getProveedor().getCuit()))
-                            .replace("{2}", pedido.getFechaPedido().toString())
-                            .replace("{3}", Integer.toString(pedido.getArrayDetallePedido().size())));
+        System.out.println("Pedido cargado para Proveedor {1}, pedido el {2}, con {3} productos".replace("{1}", Long.toString(pedido.getProveedor().getCuit())).replace("{2}", pedido.getFechaPedido().toString()).replace("{3}", Integer.toString(pedido.getArrayDetallePedido().size())));
     }
 }
