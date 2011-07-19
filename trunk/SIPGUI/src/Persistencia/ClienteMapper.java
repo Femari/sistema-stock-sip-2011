@@ -25,7 +25,6 @@ public class ClienteMapper {
             PreparedStatement selectCliente;
             String sqlString = "SELECT * FROM Cliente WHERE cuit = ?";
             selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
-
             MapearSelectPreparedStatement(cuit, selectCliente);
             Cliente cliente = new Cliente();
             MapearEntidad(cliente, selectCliente.executeQuery());
@@ -44,18 +43,17 @@ public class ClienteMapper {
             String sqlString = "UPDATE Cliente SET nombre = ? , direccion = ? , codigoPostal = ? , telefono = ? , fax = ? WHERE cuit = ?";
             System.out.println(sqlString);
             updateCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
-
             MapearUpdatePreparedStatement(cliente, updateCliente);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
+
     public void Agregar(Cliente cliente) {
         try {
             PreparedStatement insertCliente;
-            String sqlString = "INSERT INTO Cliente values (? ,'?','?','?',?,?)";
+            String sqlString = "INSERT INTO Cliente values (? ,'?','?','?','?','?')";
             System.out.println(sqlString);
             insertCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
             MapearInsertPreparedStatement(cliente, insertCliente);
@@ -72,8 +70,8 @@ public class ClienteMapper {
                 cliente.setDireccion(rs.getString("direccion"));
                 cliente.setNombre(rs.getString("nombre"));
                 cliente.setCodigoPostal(rs.getString("codigoPostal"));
-                cliente.setTelefono(rs.getInt("telefono"));
-                cliente.setFax(rs.getInt("fax"));
+                cliente.setTelefono(rs.getString("telefono"));
+                cliente.setFax(rs.getString("fax"));
 
                 return true;
             }
@@ -98,24 +96,25 @@ public class ClienteMapper {
             preparedStatement.setString(1, cliente.getNombre());
             preparedStatement.setString(2, cliente.getDireccion());
             preparedStatement.setString(3, cliente.getCodigoPostal());
-            preparedStatement.setInt(4, cliente.getTelefono());
-            preparedStatement.setInt(5, cliente.getFax());
-
+            preparedStatement.setString(4, cliente.getTelefono());
+            preparedStatement.setString(5, cliente.getFax());
+            preparedStatement.setBoolean(6, cliente.getHabilitado());
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
         }
     }
-    
+
     static void MapearInsertPreparedStatement(Cliente cliente, PreparedStatement preparedStatement) {
         try {
             //preparedStatement.setLong(1, cliente.getCuit());
             preparedStatement.setString(2, cliente.getNombre());
             preparedStatement.setString(3, cliente.getDireccion());
             preparedStatement.setString(3, cliente.getCodigoPostal());
-            preparedStatement.setInt(4, cliente.getTelefono());
-            preparedStatement.setInt(5, cliente.getFax());
+            preparedStatement.setString(4, cliente.getTelefono());
+            preparedStatement.setString(5, cliente.getFax());
+            preparedStatement.setBoolean(6, cliente.getHabilitado());
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
@@ -130,9 +129,7 @@ public class ClienteMapper {
             PreparedStatement selectCliente;
             String sqlString = "SELECT count(*) FROM Cliente WHERE cuit = ?";
             selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
-
             MapearSelectPreparedStatement(cuit, selectCliente);
-
             ResultSet rs;
             rs = selectCliente.executeQuery();
             rs.next();
@@ -151,7 +148,6 @@ public class ClienteMapper {
             PreparedStatement selectCliente;
             String sqlString = "SELECT * FROM Cliente ORDER BY Nombre";
             selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
-
             Cliente cliente = new Cliente();
             ResultSet rs = selectCliente.executeQuery();
             while (MapearEntidad(cliente, rs)) {
@@ -162,7 +158,6 @@ public class ClienteMapper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return clientes;
     }
 
@@ -173,32 +168,42 @@ public class ClienteMapper {
             PreparedStatement selectCliente;
             String sqlString;
             sqlString = "SELECT * FROM Cliente WHERE ";
-            if(cli.getCuit() != 0)
-                sqlString += "Cuit="+cli.getCuit();
-            if(cli.getCuit()!= 0 && !cli.getNombre().isEmpty())
+            if (cli.getCuit() != 0) {
+                sqlString += "Cuit=" + cli.getCuit();
+            }
+            if (cli.getCuit() != 0 && !cli.getNombre().isEmpty()) {
                 sqlString += " AND ";
-            if(!cli.getNombre().isEmpty())
-                sqlString += "Nombre LIKE '%"+cli.getNombre()+"%'";
-            if((cli.getCuit()!=0 || !cli.getNombre().isEmpty()) && !cli.getDireccion().isEmpty())
+            }
+            if (!cli.getNombre().isEmpty()) {
+                sqlString += "Nombre LIKE '%" + cli.getNombre() + "%'";
+            }
+            if ((cli.getCuit() != 0 || !cli.getNombre().isEmpty()) && !cli.getDireccion().isEmpty()) {
                 sqlString += " AND ";
-            if(!cli.getDireccion().isEmpty())
-                sqlString += " Direccion LIKE '%"+cli.getDireccion()+"%'";
-            if((cli.getCuit()!=0 || !cli.getNombre().isEmpty() || !cli.getDireccion().isEmpty()) 
-                    && !cli.getCodigoPostal().isEmpty())
+            }
+            if (!cli.getDireccion().isEmpty()) {
+                sqlString += " Direccion LIKE '%" + cli.getDireccion() + "%'";
+            }
+            if ((cli.getCuit() != 0 || !cli.getNombre().isEmpty() || !cli.getDireccion().isEmpty())
+                    && !cli.getCodigoPostal().isEmpty()) {
                 sqlString += " AND ";
-            if(!cli.getCodigoPostal().isEmpty())
-                sqlString += " CodigoPostal LIKE '%"+cli.getCodigoPostal()+"%'";
-            if((cli.getCuit()!=0 || !cli.getNombre().isEmpty() || !cli.getDireccion().isEmpty() || !cli.getCodigoPostal().isEmpty())
-                    && cli.getTelefono()!=0)
+            }
+            if (!cli.getCodigoPostal().isEmpty()) {
+                sqlString += " CodigoPostal LIKE '%" + cli.getCodigoPostal() + "%'";
+            }
+            if ((cli.getCuit() != 0 || !cli.getNombre().isEmpty() || !cli.getDireccion().isEmpty() || !cli.getCodigoPostal().isEmpty())
+                    && !cli.getTelefono().isEmpty()) {
                 sqlString += " AND ";
-            if(cli.getTelefono()!= 0)
+            }
+            if (!cli.getTelefono().isEmpty()) {
                 sqlString += " Telefono=" + cli.getTelefono();
-            if((cli.getCuit()!=0 || !cli.getNombre().isEmpty() || !cli.getDireccion().isEmpty() || !cli.getCodigoPostal().isEmpty() || cli.getTelefono()!=0)
-                    && cli.getFax()!=0)
+            }
+            if ((cli.getCuit() != 0 || !cli.getNombre().isEmpty() || !cli.getDireccion().isEmpty() || !cli.getCodigoPostal().isEmpty() || !cli.getTelefono().isEmpty())
+                    && !cli.getFax().isEmpty()) {
                 sqlString += " AND ";
-            if(cli.getFax() != 0)
-                sqlString += " Fax="+cli.getFax();
-
+            }
+            if (!cli.getFax().isEmpty()) {
+                sqlString += " Fax=" + cli.getFax();
+            }
             System.out.println("Cargar con filtro:" + sqlString);
             selectCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
             Cliente cliente = new Cliente();
@@ -211,7 +216,6 @@ public class ClienteMapper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return clientes;
     }
 }

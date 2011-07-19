@@ -9,6 +9,7 @@ public class Cliente {
     private String codigoPostal;
     private String telefono;
     private String fax;
+    private Boolean habilitado = true;
 
     public String getNombre() {
         return nombre;
@@ -53,9 +54,17 @@ public class Cliente {
     public String getFax() {
         return fax;
     }
+    
+    public boolean getHabilitado(){
+        return this.habilitado;
+    }
 
     public void setFax(String fax) {
         this.fax = fax;
+    }
+    
+    public void setHabilitado(Boolean habilitado){
+        this.habilitado = habilitado;
     }
 
     public boolean isEmpty() {
