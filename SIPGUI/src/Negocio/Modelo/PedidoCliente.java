@@ -36,7 +36,14 @@ public class PedidoCliente extends Pedido {
 
     public void agregarDetallePedidoCliente(DetallePedidoCliente xDetallePedidoCliente) {
         arrayDetallePedidoCliente.add(xDetallePedidoCliente);
-
+    }
+    
+    public void borrarDetallePedidoCliente(Producto producto){
+        for (int i = 0; i < arrayDetallePedidoCliente.size(); i++) {
+            if (arrayDetallePedidoCliente.get(i).getProducto().equals(producto)) {
+                arrayDetallePedidoCliente.remove(i);
+            }
+        }
     }
 
     public Prioridad getPrioridad() {

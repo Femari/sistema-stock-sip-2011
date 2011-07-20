@@ -24,6 +24,10 @@ public class ProcesarPedidoCliente {
     public PedidoCliente getPedidoCliente() {
         return pedidoCliente;
     }
+    
+    public boolean PedidoVacio(){
+        return this.pedidoCliente.getArrayDetallePedido().isEmpty();
+    }
 
     public void SetearPrioridadPedido(int prioridad) {
         PrioridadMapper prioridadMapper = PrioridadMapper.getInstancia();
@@ -52,6 +56,10 @@ public class ProcesarPedidoCliente {
         detallePedidoCliente.setProducto(producto);
         detallePedidoCliente.setCantidad(cantidad);
         pedidoCliente.agregarDetallePedidoCliente(detallePedidoCliente);
+    }
+    
+    public void BorrarDetallePedidoCliente(Producto producto){
+        pedidoCliente.borrarDetallePedidoCliente(producto);
     }
 
     /**

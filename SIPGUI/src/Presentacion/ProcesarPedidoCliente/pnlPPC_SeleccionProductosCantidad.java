@@ -16,40 +16,40 @@ import Presentacion.SIPGUIView;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author NicolasM
  */
 public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
-    
+
     private int nroPaso;
     private pnlProcesarPedidoCliente parent;
     private ProcesarPedidoCliente proceso;
     private DefaultListModel listModel;
-    
 
     /** Creates new form pnlPPC_SeleccionProductosCantidad */
     public pnlPPC_SeleccionProductosCantidad(pnlProcesarPedidoCliente parent, ProcesarPedidoCliente proceso, int nroPaso) {
         initComponents();
-        
+
         this.proceso = proceso;
         this.parent = parent;
         this.nroPaso = nroPaso;
-        
+
         //Cargo el combo de productos
         CargarComboProductos();
-        
+
         listModel = new DefaultListModel();
         lstProductosAgregados.setModel(listModel);
-        
+
     }
-    
+
     @Override
-    public void setVisible(boolean visible){
+    public void setVisible(boolean visible) {
         super.setVisible(visible);
-        
-        if(visible){
+
+        if (visible) {
             SIPGUIView.getInstance().SeleccionarNumeroPaso(nroPaso);
         }
     }
@@ -71,6 +71,8 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstProductosAgregados = new javax.swing.JList();
         btnAgregarProducto = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
+        btnEliminarProducto = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
         setPreferredSize(new java.awt.Dimension(400, 300));
@@ -110,6 +112,23 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
             }
         });
 
+        btnAnterior.setText(resourceMap.getString("btnAnterior.text")); // NOI18N
+        btnAnterior.setName("btnAnterior"); // NOI18N
+        btnAnterior.setOpaque(false);
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorjbSiguienteActionPerformed(evt);
+            }
+        });
+
+        btnEliminarProducto.setText(resourceMap.getString("btnEliminarProducto.text")); // NOI18N
+        btnEliminarProducto.setName("btnEliminarProducto"); // NOI18N
+        btnEliminarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarProductoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -117,24 +136,33 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblProducto)
-                    .addComponent(lblCantidad))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSiguiente, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                    .addComponent(cboProductos, 0, 306, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(spCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                        .addComponent(btnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblProducto)
+                            .addComponent(lblCantidad))
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cboProductos, javax.swing.GroupLayout.Alignment.LEADING, 0, 330, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(spCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(32, 32, 32)
+                                        .addComponent(btnAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnEliminarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAnterior)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 267, Short.MAX_VALUE)
+                        .addComponent(btnSiguiente)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblProducto)
                     .addComponent(cboProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -142,12 +170,15 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCantidad)
                     .addComponent(spCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarProducto))
+                    .addComponent(btnAgregarProducto)
+                    .addComponent(btnEliminarProducto))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSiguiente)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAnterior)
+                    .addComponent(btnSiguiente))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -156,18 +187,34 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
 }//GEN-LAST:event_jbSiguienteActionPerformed
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
-        Producto productoSeleccionado =  ((ComboProductosItem)cboProductos.getSelectedItem()).getProducto();
-        int cantidad = (Integer)spCantidad.getValue();
-        
+        Producto productoSeleccionado = ((ComboProductosItem) cboProductos.getSelectedItem()).getProducto();
+        int cantidad = (Integer) spCantidad.getValue();
+
         proceso.AgregarDetallePedidoCliente(productoSeleccionado, cantidad);
-        listModel.addElement(cantidad + "    " + productoSeleccionado.getNombre());
-        cboProductos.removeItem((ComboProductosItem)cboProductos.getSelectedItem());
-        
-                
+        //listModel.addElement(cantidad + "    " + productoSeleccionado.getNombre());
+        listModel.addElement(new ProductoCantidad(productoSeleccionado, cantidad));
+        cboProductos.removeItem((ComboProductosItem) cboProductos.getSelectedItem());
+
+
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
+    private void btnAnteriorjbSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorjbSiguienteActionPerformed
+        this.PasoAnterior();
+    }//GEN-LAST:event_btnAnteriorjbSiguienteActionPerformed
+
+    private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
+        if (lstProductosAgregados.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un producto de la lista primero.", "Procesar pedido cliente", JOptionPane.WARNING_MESSAGE);
+        } else {
+            ProductoCantidad prodcant = (ProductoCantidad)listModel.remove(lstProductosAgregados.getSelectedIndex());
+            proceso.BorrarDetallePedidoCliente(prodcant.getProducto());
+            cboProductos.addItem(new ComboProductosItem(prodcant.getProducto()));
+        }
+    }//GEN-LAST:event_btnEliminarProductoActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarProducto;
+    private javax.swing.JButton btnAnterior;
+    private javax.swing.JButton btnEliminarProducto;
     private javax.swing.JButton btnSiguiente;
     private javax.swing.JComboBox cboProductos;
     private javax.swing.JScrollPane jScrollPane1;
@@ -177,34 +224,73 @@ public class pnlPPC_SeleccionProductosCantidad extends javax.swing.JPanel {
     private javax.swing.JSpinner spCantidad;
     // End of variables declaration//GEN-END:variables
 
-    private void SiguientePaso(){
-        
-        parent.SiguientePaso(nroPaso);
-        
+    private void SiguientePaso() {
+        if (proceso.PedidoVacio()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar al menos un producto", "Procesar pedido cliente", JOptionPane.WARNING_MESSAGE);
+        } else {
+
+            parent.SiguientePaso(nroPaso);
+        }
+
     }
-    
-    private void CargarComboProductos(){
+
+    private void PasoAnterior() {
+        parent.PasoAnterior(nroPaso);
+    }
+
+    private void CargarComboProductos() {
         List<Producto> productos = proceso.getProductos();
-        for(Producto producto:productos){
+        for (Producto producto : productos) {
             cboProductos.addItem(new ComboProductosItem(producto));
         }
     }
-    
-    class ComboProductosItem{
+
+    class ComboProductosItem {
+
         private Producto producto;
-        
-        public Producto getProducto(){
+
+        public Producto getProducto() {
             return producto;
         }
-        
-        public ComboProductosItem(Producto producto){
+
+        public ComboProductosItem(Producto producto) {
+            this.producto = producto;
+        }
+
+        @Override
+        public String toString() {
+            return this.producto.getNombre();
+        }
+    }
+
+    class ProductoCantidad {
+        private Producto producto;
+        private int cantidad;
+
+        public ProductoCantidad(Producto producto, int cantidad) {
+            this.producto = producto;
+            this.cantidad = cantidad;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
+
+        public void setCantidad(int cantidad) {
+            this.cantidad = cantidad;
+        }
+
+        public Producto getProducto() {
+            return producto;
+        }
+
+        public void setProducto(Producto producto) {
             this.producto = producto;
         }
         
         @Override
         public String toString(){
-            return this.producto.getNombre();
+            return (cantidad + "    " + producto.getNombre());
         }
     }
-
 }
