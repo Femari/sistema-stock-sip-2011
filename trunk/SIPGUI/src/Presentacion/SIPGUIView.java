@@ -7,6 +7,7 @@ package Presentacion;
 import Presentacion.AbmClientes.ClientesConsulta;
 import Presentacion.AbmMateriales.MaterialesConsulta;
 import Presentacion.ProcesarPedidoCliente.pnlProcesarPedidoCliente;
+import Presentacion.ReporteStock.pnlReporteStock;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import org.jdesktop.application.Action;
@@ -116,7 +117,7 @@ public class SIPGUIView extends FrameView {
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         mnuMateriales = new javax.swing.JMenu();
         mnuMaterialesConsulta = new javax.swing.JMenuItem();
-        mnuMaterialesPlanifStock = new javax.swing.JMenuItem();
+        mnuMaterialesReporteStock = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
@@ -186,9 +187,14 @@ public class SIPGUIView extends FrameView {
         });
         mnuMateriales.add(mnuMaterialesConsulta);
 
-        mnuMaterialesPlanifStock.setText(resourceMap.getString("mnuMaterialesPlanifStock.text")); // NOI18N
-        mnuMaterialesPlanifStock.setName("mnuMaterialesPlanifStock"); // NOI18N
-        mnuMateriales.add(mnuMaterialesPlanifStock);
+        mnuMaterialesReporteStock.setText(resourceMap.getString("mnuMaterialesReporteStock.text")); // NOI18N
+        mnuMaterialesReporteStock.setName("mnuMaterialesReporteStock"); // NOI18N
+        mnuMaterialesReporteStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuMaterialesReporteStockActionPerformed(evt);
+            }
+        });
+        mnuMateriales.add(mnuMaterialesReporteStock);
 
         menuBar.add(mnuMateriales);
 
@@ -259,6 +265,11 @@ public class SIPGUIView extends FrameView {
         mainPanel.revalidate();
     }//GEN-LAST:event_mnuClienteAbmActionPerformed
 
+    private void mnuMaterialesReporteStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuMaterialesReporteStockActionPerformed
+        mainPanel.add(new pnlReporteStock());
+        mainPanel.revalidate();
+    }//GEN-LAST:event_mnuMaterialesReporteStockActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
@@ -266,7 +277,7 @@ public class SIPGUIView extends FrameView {
     private javax.swing.JMenuItem mnuClienteNuevoPedido;
     private javax.swing.JMenu mnuMateriales;
     private javax.swing.JMenuItem mnuMaterialesConsulta;
-    private javax.swing.JMenuItem mnuMaterialesPlanifStock;
+    private javax.swing.JMenuItem mnuMaterialesReporteStock;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
