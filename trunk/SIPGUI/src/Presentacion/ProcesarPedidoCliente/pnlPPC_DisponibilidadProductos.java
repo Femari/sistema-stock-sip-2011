@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
  * @author NicolasM
  */
 public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
-
+    
     private int nroPaso;
     private pnlProcesarPedidoCliente parent;
     private ProcesarPedidoCliente proceso;
@@ -43,20 +43,20 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
                 new String[]{
                     "Producto", "Cantidad", "Stock deposito", "Stock pedidos", "Disponibilidad", "Disponibilidad faltante"
                 }) {
-
+            
             boolean[] canEdit = new boolean[]{
                 false, false, false, false, false, false
             };
-
+            
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
         };
-
+        
         initComponents();
-
+        
         tblDetalleDisponibilidadActual.setDefaultRenderer(Object.class, new ColoreaCeldas());
-
+        
         tblDetalleDisponibilidadActual.getColumnModel().getColumn(0).setPreferredWidth(120); //producto
         tblDetalleDisponibilidadActual.getColumnModel().getColumn(1).setPreferredWidth(30); //cantidad
         tblDetalleDisponibilidadActual.getColumnModel().getColumn(2).setPreferredWidth(30); //stock deposito
@@ -67,13 +67,13 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         this.proceso = proceso;
         this.parent = parent;
         this.nroPaso = nroPaso;
-
+        
     }
-
+    
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-
+        
         if (visible) {
             CargarGrilla();
             lblFechaDisp1.setText(new SimpleDateFormat("dd-MM-yyyy").format(proceso.calcularFechaMinimaDisponibilidad()));
@@ -181,11 +181,11 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
         this.SiguientePaso();
 }//GEN-LAST:event_btnSiguienteActionPerformed
-
+    
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
         this.PasoAnterior();
     }//GEN-LAST:event_btnAnteriorActionPerformed
-
+    
     private void btnEliminarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarItemActionPerformed
 //        if (lstProductosAgregados.getSelectedIndex() == -1) {
 //            JOptionPane.showMessageDialog(this, "Debe seleccionar un producto de la lista primero.", "Procesar pedido cliente", JOptionPane.WARNING_MESSAGE);
@@ -225,11 +225,11 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
             parent.SiguientePaso(nroPaso);
         }
     }
-
+    
     private void PasoAnterior() {
         parent.PasoAnterior(nroPaso);
     }
-
+    
     public void CargarGrilla() {
         tableModel.setRowCount(0);
         ArrayList<DetalleDisponibilidadProducto> arrayDetalleDisponibilidad = proceso.VerificarDisponibilidadProductos();
@@ -237,9 +237,9 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
         for (DetallePedidoCliente sDetallePedidoCliente : proceso.getPedidoCliente().getArrayDetallePedido()) {
             tableModel.addRow(ArmarFila(sDetallePedidoCliente, BuscarDetalleDisponibilidadPorProducto(sDetallePedidoCliente.getProducto(), arrayDetalleDisponibilidad)));
         }
-
+        
     }
-
+    
     private Object[] ArmarFila(DetallePedidoCliente xDetallePedidoCliente, DetalleDisponibilidadProducto xDetalleDisponibilidadProducto) {
         Producto colProducto = xDetallePedidoCliente.getProducto();
         int colCantidad = xDetallePedidoCliente.getCantidad();
@@ -256,11 +256,11 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
             colDisponibilidad = xDetalleDisponibilidadProducto.getDescripcionEstado(proceso.getPedidoCliente().getPrioridad().calcularFechaEsperadaDeEntrega(new Date()));
         }
         String colDisponibilidadFaltante = xDetalleDisponibilidadProducto.getDisponibilidadFaltante();
-
-
+        
+        
         return new Object[]{colProducto, colCantidad, colStockDeposito, colStockPedidos, colDisponibilidad, colDisponibilidadFaltante};
     }
-
+    
     private DetalleDisponibilidadProducto BuscarDetalleDisponibilidadPorProducto(Producto producto, ArrayList<DetalleDisponibilidadProducto> xArrayDetalleDisponibilidad) {
         for (DetalleDisponibilidadProducto detalle : xArrayDetalleDisponibilidad) {
             if (detalle.getProducto().equals(producto)) {
@@ -280,12 +280,12 @@ public class pnlPPC_DisponibilidadProductos extends javax.swing.JPanel {
     }
      */
     public class ColoreaCeldas extends DefaultTableCellRenderer {
-
+        
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-
+            
             String s = table.getModel().getValueAt(row, col).toString();
-
+            
             if (s.startsWith("No disponible")) {
                 setBackground(new Color(255, 150, 150));
             } else if (s.startsWith("Stock")) {

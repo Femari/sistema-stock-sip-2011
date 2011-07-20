@@ -4,50 +4,46 @@
  */
 
 /*
- * pnlProcesarPedidoCliente.java
+ * pnlReporteStock.java
  *
- * Created on 20/06/2011, 21:46:13
+ * Created on 20/07/2011, 00:44:13
  */
-package Presentacion.ProcesarPedidoCliente;
+package Presentacion.ReporteStock;
 
-import Negocio.ProcesarPedidoCliente;
+import Negocio.GenerarReporteStock;
 import Presentacion.SIPGUIView;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
  *
  * @author NicolasM
  */
-public class pnlProcesarPedidoCliente extends javax.swing.JPanel {
-
-    private static final String[] pasosProceso = {"Cliente y Prioridad", "Productos y cantidades", "Confirmar pedido"};
-    private ProcesarPedidoCliente proceso = new ProcesarPedidoCliente();
+public class pnlReporteStock extends javax.swing.JPanel {
+    private static final String[] pasosProceso = {"Filtros", "Reporte de Stock"};
+    private GenerarReporteStock proceso = new GenerarReporteStock();
     private ArrayList<JPanel> panelesProceso;
-
-    /** Creates new form pnlProcesarPedidoCliente */
-    public pnlProcesarPedidoCliente() {
+    
+    
+    
+    /** Creates new form pnlReporteStock */
+    public pnlReporteStock() {
         initComponents();
-
+        
         this.setLayout(new BorderLayout());
         SIPGUIView.getInstance().RegistrarPasosProceso(pasosProceso);
 
         ArrayList<JPanel> pasos = new ArrayList<JPanel>();
-        pasos.add(new pnlPPC_SeleccionClientePrioridad(this, proceso, 0));
-        pasos.add(new pnlPPC_SeleccionProductosCantidad(this, proceso, 1));
-        pasos.add(new pnlPPC_DisponibilidadProductos(this, proceso, 2));
-
+        pasos.add(new pnlRS_Filtros(this, proceso, 0));
+        //pasos.add(new pnlPPC_SeleccionProductosCantidad(this, proceso, 1));
+        
         panelesProceso = pasos;
 
         this.add(panelesProceso.get(0));
         panelesProceso.get(0).setVisible(true);
-        //this.setBorder(BorderFactory.createBevelBorder(0));
-        //panelesProceso[0].setBorder(BorderFactory.createBevelBorder(0));
     }
-
+    
     public void SiguientePaso(int pasoActual) {
         panelesProceso.get(pasoActual).setVisible(false);
         this.remove(panelesProceso.get(pasoActual));
@@ -56,6 +52,7 @@ public class pnlProcesarPedidoCliente extends javax.swing.JPanel {
         if (panelesProceso.size() == proximoPaso) {
             //Alcanzó el último paso, elimina el detalle de pasos
             SIPGUIView.getInstance().EliminarProceso();
+            //TODO: quitar this del mainPanel de SIPGUIView
         } else {
             panelesProceso.get(proximoPaso).setVisible(true);
             this.add(panelesProceso.get(proximoPaso));
@@ -70,7 +67,6 @@ public class pnlProcesarPedidoCliente extends javax.swing.JPanel {
         this.add(panelesProceso.get(pasoActual -1));
     }
 
-    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -80,19 +76,17 @@ public class pnlProcesarPedidoCliente extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(Presentacion.SIPGUIApp.class).getContext().getResourceMap(pnlProcesarPedidoCliente.class);
-        setBackground(resourceMap.getColor("Form.background")); // NOI18N
         setName("Form"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 479, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 407, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
