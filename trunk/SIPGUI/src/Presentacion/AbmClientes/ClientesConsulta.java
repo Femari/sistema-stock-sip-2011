@@ -475,7 +475,6 @@ public class ClientesConsulta extends javax.swing.JPanel {
             //Cancelacion de la busqueda
             case 0: {
                 this.limpiarCampos();
-                this.limpiarTabla();
             }
             break;
             //Cancelacion del alta
@@ -522,7 +521,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 btnClienteBuscar.setEnabled(true);
                 cliente = new Cliente();
                 this.limpiarCampos();
-                this.limpiarTabla();
+                txtClienteCuit.setEnabled(true);
                 this.etapa = 0;
             } else {
                 String message = "El cliente " + cliente.getCuit() + " no pudo darse de alta satisfactoriamente.";
@@ -589,6 +588,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 if (option == 0) {
                     //Saco los datos de la fila seleccionada y lo pasoModificar a textbox
                     lblClienteBajaDesc.setEnabled(true);
+                    btnClienteBaja.setEnabled(false);
                     txtClienteCuit.setText(dtm.getValueAt(row, 0).toString());
                     txtClienteNombre.setText(dtm.getValueAt(row, 1).toString());
                     txtClienteDireccion.setText(dtm.getValueAt(row, 2).toString());
