@@ -12,7 +12,6 @@ package Presentacion.AbmClientes;
 
 import Negocio.Modelo.Cliente;
 import Negocio.ProcesarClientes;
-import Negocio.ProcesarPedidoCliente;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
@@ -26,14 +25,14 @@ public class ClientesConsulta extends javax.swing.JPanel {
 
     /** Creates new form MaterialesConsulta */
     private DefaultTableModel dtm;
-    private String[] columnas = {"Cuit", "Nombre", "Direccion", "Codigo Postal", "Telefono", "Fax"};
+    private String[] columnas = {"Cuit", "Nombre", "Direccion", "Codigo Postal", "Telefono", "Fax","Dado de Baja"};
     private Cliente cliente;
-    private ArrayList<Cliente> arrayClientesActuales;
-    private ArrayList<Cliente> arrayClientesModificados;
+
     /*Indica la etapa en que esta la operacion
      *0 = Iniciada
      *1 = Para dar de alta
-     *2 = 
+     *2 = Para dar de baja
+     *3 = Para modificar
      */
     private Integer etapa = 0;
 
@@ -41,7 +40,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
         dtm = new DefaultTableModel(columnas, 0);
         initComponents();
         btnClienteModificar.setEnabled(false);
-        btnClienteAlta.setEnabled(false);
+        //btnClienteAlta.setEnabled(false);
+        //btnClienteBaja.setEnabled(false);
     }
 
     /** This method is called from within the constructor to
@@ -73,6 +73,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnClienteAlta = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
+        btnClienteBaja = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         btnClienteModificar = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         btnClienteCancelar = new javax.swing.JButton();
@@ -138,9 +140,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                     .addComponent(txtClienteCuit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6))
+                    .addComponent(jLabel6)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -178,6 +178,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
 
         tblBusquedaCliente.setModel(this.dtm);
         tblBusquedaCliente.setName("jscroll"); // NOI18N
+        tblBusquedaCliente.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tblBusquedaCliente);
 
         jToolBar1.setRollover(true);
@@ -210,11 +211,31 @@ public class ClientesConsulta extends javax.swing.JPanel {
         jSeparator2.setName("jSeparator2"); // NOI18N
         jToolBar1.add(jSeparator2);
 
+        btnClienteBaja.setText(resourceMap.getString("btnClienteBaja.text")); // NOI18N
+        btnClienteBaja.setFocusable(false);
+        btnClienteBaja.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnClienteBaja.setName("btnClienteBaja"); // NOI18N
+        btnClienteBaja.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnClienteBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClienteBajaActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnClienteBaja);
+
+        jSeparator5.setName("jSeparator5"); // NOI18N
+        jToolBar1.add(jSeparator5);
+
         btnClienteModificar.setText(resourceMap.getString("btnClienteModificar.text")); // NOI18N
         btnClienteModificar.setFocusable(false);
         btnClienteModificar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClienteModificar.setName("btnClienteModificar"); // NOI18N
         btnClienteModificar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnClienteModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClienteModificarActionPerformed(evt);
+            }
+        });
         jToolBar1.add(btnClienteModificar);
 
         jSeparator3.setName("jSeparator3"); // NOI18N
@@ -270,7 +291,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
                         client.getDireccion(),
                         client.getCodigoPostal(),
                         client.getTelefono(),
-                        client.getFax()
+                        client.getFax(),
+                        (client.getHabilitado())?"No":"Si"
                     });
         }
     }
@@ -319,6 +341,15 @@ public class ClientesConsulta extends javax.swing.JPanel {
         cliente.setTelefono(txtClienteTelefono.getText());
         cliente.setFax(txtClienteFax.getText());
 
+    }
+    
+    private void setFormAlEstadoDeBusqueda(){
+            this.etapa = 0;
+            this.limpiarCampos();
+            txtClienteCuit.setEditable(true);
+            txtClienteCuit.requestFocus();
+            btnClienteBuscar.setEnabled(true);
+            //btnClienteAlta.setEnabled(false);
     }
 
     private boolean validarEtapa() {
@@ -410,6 +441,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
     private void btnClienteCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteCancelarActionPerformed
         Integer option;
         switch (this.etapa) {
+            //Cancelacion de la busqueda
             case 0: {
                 this.limpiarCampos();
                 this.limpiarTabla();
@@ -421,19 +453,26 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 String message = "Esta seguro que quiere cancelar el alta de este Cliente?";
                 option = JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
                 //El sistema actua de acuerdo a la seleccion del usuario
-                if (option == 0) {
-                    this.etapa = 0;
-                    this.limpiarCampos();
-                    txtClienteCuit.setEditable(true);
-                    txtClienteCuit.requestFocus();
-                    btnClienteBuscar.setEnabled(true);
-                    btnClienteAlta.setEnabled(false);
-                }
-
+                if (option == 0) 
+                    this.setFormAlEstadoDeBusqueda();
             }
             break;
+            //Cancelar la baja
             case 2: {
-                this.etapa = 1;
+                String message = "Esta seguro que quiere cancelar la baja de este Cliente?";
+                option = JOptionPane.showConfirmDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
+                //El sistema actua de acuerdo a la seleccion del usuario
+                if (option == 0) 
+                    this.setFormAlEstadoDeBusqueda();
+            }
+            break;
+            //Cancelar la Modificacion
+            case 3: {
+                String message = "Esta seguro que quiere cancelar la Modificacion de este Cliente?";
+                option = JOptionPane.showConfirmDialog(this, message, "Modificar Cliente", JOptionPane.WARNING_MESSAGE);
+                //El sistema actua de acuerdo a la seleccion del usuario
+                if (option == 0)
+                    this.setFormAlEstadoDeBusqueda();
             }
             break;
         }
@@ -461,8 +500,39 @@ public class ClientesConsulta extends javax.swing.JPanel {
             
         
     }//GEN-LAST:event_btnClienteAltaActionPerformed
+
+    private void btnClienteBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteBajaActionPerformed
+        this.etapa = 3;
+        int row = tblBusquedaCliente.getSelectedRow();
+        String message = "Confirma Baja de cliente: "+dtm.getValueAt(row, 1)+"?";
+        int option = JOptionPane.showConfirmDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
+        if(option ==0){
+            //Saco los datos de la fila seleccionada y lo paso a objeto
+            cliente.setCuit(Long.parseLong(dtm.getValueAt(row, 0).toString()));
+            cliente.setNombre(dtm.getValueAt(row, 1).toString());
+            cliente.setDireccion(dtm.getValueAt(row, 2).toString());
+            cliente.setCodigoPostal(dtm.getValueAt(row, 3).toString());
+            cliente.setTelefono(dtm.getValueAt(row, 4).toString());
+            cliente.setFax(dtm.getValueAt(row, 5).toString());
+            if(dtm.getValueAt(row, 6).toString().equals("No"))
+                cliente.setHabilitado(true);
+            else
+                cliente.setHabilitado(false);
+            ProcesarClientes procCli = new ProcesarClientes();
+            procCli.bajaCliente(cliente);
+            
+        }
+            System.out.println("selecciono la:"+cliente.getCuit());
+        
+    }//GEN-LAST:event_btnClienteBajaActionPerformed
+
+    private void btnClienteModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteModificarActionPerformed
+        this.etapa = 4;
+    }//GEN-LAST:event_btnClienteModificarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClienteAlta;
+    private javax.swing.JButton btnClienteBaja;
     private javax.swing.JButton btnClienteBuscar;
     private javax.swing.JButton btnClienteCancelar;
     private javax.swing.JButton btnClienteModificar;
@@ -478,6 +548,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTable tblBusquedaCliente;
     private javax.swing.JTextField txtClienteCodPost;

@@ -29,13 +29,18 @@ public class ProcesarClientes implements IProcesarClientes {
         ClienteMapper.getInstancia().Agregar(cliente);
     }
 
-    public void modificarCliente(Cliente ClienteActual, Cliente ClienteModificado) {
+    public void modificarCliente(Cliente ClienteModificado) {
         ClienteMapper.getInstancia().Modificar(ClienteModificado);
     }
 
     public boolean existeCliente(Cliente cliente) {
         ArrayList<Cliente> clients = ClienteMapper.getInstancia().CargarTodos(cliente);
         return clients.isEmpty()?false:true;
+    }
+    
+    public void bajaCliente (Cliente cliente){
+        cliente.setHabilitado(false);
+        ClienteMapper.getInstancia().Modificar(cliente);
     }
    
     
