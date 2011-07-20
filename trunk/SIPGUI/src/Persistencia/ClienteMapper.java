@@ -53,7 +53,7 @@ public class ClienteMapper {
     public void Agregar(Cliente cliente) {
         try {
             PreparedStatement insertCliente;
-            String sqlString = "INSERT INTO Cliente values (? ,'?','?','?','?','?')";
+            String sqlString = "INSERT INTO Cliente values (?,?,?,?,?,?,?)";
             System.out.println(sqlString);
             insertCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
             MapearInsertPreparedStatement(cliente, insertCliente);
@@ -72,6 +72,7 @@ public class ClienteMapper {
                 cliente.setCodigoPostal(rs.getString("codigoPostal"));
                 cliente.setTelefono(rs.getString("telefono"));
                 cliente.setFax(rs.getString("fax"));
+                cliente.setHabilitado(rs.getBoolean("Habilitado"));
 
                 return true;
             }
@@ -93,13 +94,16 @@ public class ClienteMapper {
 
     static void MapearUpdatePreparedStatement(Cliente cliente, PreparedStatement preparedStatement) {
         try {
-            preparedStatement.setString(1, cliente.getNombre());
-            preparedStatement.setString(2, cliente.getDireccion());
-            preparedStatement.setString(3, cliente.getCodigoPostal());
-            preparedStatement.setString(4, cliente.getTelefono());
-            preparedStatement.setString(5, cliente.getFax());
-            preparedStatement.setBoolean(6, cliente.getHabilitado());
+            
+            preparedStatement.setLong(1, cliente.getCuit());
+            preparedStatement.setString(2, cliente.getNombre());
+            preparedStatement.setString(3, cliente.getDireccion());
+            preparedStatement.setString(4, cliente.getCodigoPostal());
+            preparedStatement.setString(5, cliente.getTelefono());
+            preparedStatement.setString(6, cliente.getFax());
+            preparedStatement.setBoolean(7, cliente.getHabilitado());
             preparedStatement.executeUpdate();
+
 
         } catch (SQLException ex) {
             System.err.println("UsePreparedStatement: " + ex.getMessage());
@@ -108,13 +112,14 @@ public class ClienteMapper {
 
     static void MapearInsertPreparedStatement(Cliente cliente, PreparedStatement preparedStatement) {
         try {
-            //preparedStatement.setLong(1, cliente.getCuit());
+            
+            preparedStatement.setLong(1, cliente.getCuit());
             preparedStatement.setString(2, cliente.getNombre());
             preparedStatement.setString(3, cliente.getDireccion());
-            preparedStatement.setString(3, cliente.getCodigoPostal());
-            preparedStatement.setString(4, cliente.getTelefono());
-            preparedStatement.setString(5, cliente.getFax());
-            preparedStatement.setBoolean(6, cliente.getHabilitado());
+            preparedStatement.setString(4, cliente.getCodigoPostal());
+            preparedStatement.setString(5, cliente.getTelefono());
+            preparedStatement.setString(6, cliente.getFax());
+            preparedStatement.setBoolean(7, cliente.getHabilitado());
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {

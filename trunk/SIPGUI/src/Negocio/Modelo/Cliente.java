@@ -9,61 +9,61 @@ public class Cliente {
     private String codigoPostal;
     private String telefono;
     private String fax;
-    private Boolean habilitado = true;
+    private boolean habilitado = true;
 
     public String getNombre() {
         return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public long getCuit() {
         return cuit;
     }
 
-    public void setCuit(long cuit) {
-        this.cuit = cuit;
-    }
-
     public String getDireccion() {
         return direccion;
-    }
-
-    public void setDireccion(String calle) {
-        this.direccion = calle;
     }
 
     public String getCodigoPostal() {
         return codigoPostal;
     }
 
-    public void setCodigoPostal(String codigoPostal) {
-        this.codigoPostal = codigoPostal;
-    }
-
     public String getTelefono() {
         return telefono;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public boolean getHabilitado() {
+        return this.habilitado;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setCuit(long cuit) {
+        this.cuit = cuit;
+    }
+
+    public void setDireccion(String calle) {
+        this.direccion = calle;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
-    public String getFax() {
-        return fax;
-    }
-    
-    public boolean getHabilitado(){
-        return this.habilitado;
-    }
-
     public void setFax(String fax) {
         this.fax = fax;
     }
-    
-    public void setHabilitado(Boolean habilitado){
+
+    public void setHabilitado(boolean habilitado) {
         this.habilitado = habilitado;
     }
 
