@@ -24,45 +24,53 @@ import javax.swing.JPanel;
  */
 public class pnlProcesarPedidoCliente extends javax.swing.JPanel {
 
-    private static final String[] pasosProceso = {"Cliente y Prioridad", "Productos", "Comprometer Stock", "Emitir pedido"};
-    
+    private static final String[] pasosProceso = {"Cliente y Prioridad", "Productos y cantidades", "Confirmar pedido"};
     private ProcesarPedidoCliente proceso = new ProcesarPedidoCliente();
     private ArrayList<JPanel> panelesProceso;
-    
+
     /** Creates new form pnlProcesarPedidoCliente */
     public pnlProcesarPedidoCliente() {
         initComponents();
-        
+
         this.setLayout(new BorderLayout());
         SIPGUIView.getInstance().RegistrarPasosProceso(pasosProceso);
-        
+
         ArrayList<JPanel> pasos = new ArrayList<JPanel>();
         pasos.add(new pnlPPC_SeleccionClientePrioridad(this, proceso, 0));
         pasos.add(new pnlPPC_SeleccionProductosCantidad(this, proceso, 1));
         pasos.add(new pnlPPC_DisponibilidadProductos(this, proceso, 2));
-        
+
         panelesProceso = pasos;
-        
+
         this.add(panelesProceso.get(0));
         panelesProceso.get(0).setVisible(true);
         //this.setBorder(BorderFactory.createBevelBorder(0));
         //panelesProceso[0].setBorder(BorderFactory.createBevelBorder(0));
     }
 
-    public void SiguientePaso(int pasoActual){
+    public void SiguientePaso(int pasoActual) {
         panelesProceso.get(pasoActual).setVisible(false);
         this.remove(panelesProceso.get(pasoActual));
-        
+
         int proximoPaso = pasoActual + 1;
-        if(panelesProceso.size() == proximoPaso){
+        if (panelesProceso.size() == proximoPaso) {
             //Alcanzó el último paso, elimina el detalle de pasos
             SIPGUIView.getInstance().EliminarProceso();
             //TODO: quitar this del mainPanel de SIPGUIView
-        }else{
-           panelesProceso.get(proximoPaso).setVisible(true);
-           this.add(panelesProceso.get(proximoPaso));
+        } else {
+            panelesProceso.get(proximoPaso).setVisible(true);
+            this.add(panelesProceso.get(proximoPaso));
         }
     }
+
+    public void PasoAnterior(int pasoActual) {
+        panelesProceso.get(pasoActual).setVisible(false);
+        this.remove(panelesProceso.get(pasoActual));
+
+        panelesProceso.get(pasoActual -1).setVisible(true);
+        this.add(panelesProceso.get(pasoActual -1));
+    }
+
     
     /** This method is called from within the constructor to
      * initialize the form.

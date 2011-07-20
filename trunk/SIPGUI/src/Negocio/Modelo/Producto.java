@@ -65,4 +65,11 @@ public class Producto {
     public boolean equals(Producto producto) {
         return codigo.equalsIgnoreCase(producto.codigo);
     }
+    
+    @Override
+    public String toString(){
+        return nombre;
+    }
+    
+            
 }
