@@ -27,7 +27,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
     private DefaultTableModel dtm;
     private String[] columnas = {"Cuit", "Nombre", "Direccion", "Codigo Postal", "Telefono", "Fax", "Dado de Baja"};
     private Cliente cliente;
-
+    
     /*Indica la etapa en que esta la operacion
      *0 = Iniciada
      *1 = Para dar de alta
@@ -35,7 +35,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
      *3 = Para modificar
      */
     private Integer etapa = 0;
-
+    private Integer pasoModificar = 1;
+    
     public ClientesConsulta() {
         dtm = new DefaultTableModel(columnas, 0);
         initComponents();
@@ -66,6 +67,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
         txtClienteTelefono = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtClienteFax = new javax.swing.JTextField();
+        lblClienteBajaDesc = new javax.swing.JLabel();
+        lblClienteBaja = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBusquedaCliente = new javax.swing.JTable();
         jToolBar1 = new javax.swing.JToolBar();
@@ -123,6 +126,12 @@ public class ClientesConsulta extends javax.swing.JPanel {
             }
         });
 
+        lblClienteBajaDesc.setText(resourceMap.getString("lblClienteBajaDesc.text")); // NOI18N
+        lblClienteBajaDesc.setName("lblClienteBajaDesc"); // NOI18N
+
+        lblClienteBaja.setText(resourceMap.getString("lblClienteBaja.text")); // NOI18N
+        lblClienteBaja.setName("lblClienteBaja"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -146,7 +155,12 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtClienteDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
-                    .addComponent(txtClienteFax, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtClienteFax, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblClienteBajaDesc)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblClienteBaja))
                     .addComponent(txtClienteNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -170,7 +184,9 @@ public class ClientesConsulta extends javax.swing.JPanel {
                     .addComponent(jLabel5)
                     .addComponent(txtClienteTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtClienteFax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(lblClienteBajaDesc)
+                    .addComponent(lblClienteBaja))
                 .addContainerGap())
         );
 
@@ -309,6 +325,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
         btnClienteBuscar.setEnabled(false);
         btnClienteAlta.setEnabled(false);
         btnClienteAlta.setEnabled(true);
+        lblClienteBajaDesc.setEnabled(false);
+        lblClienteBaja.setText("");
         /*Deshabilito el txt cuit para que no lo modifiquen (solo en caso que lo
          * hayan cargado anteriormente
          */
@@ -330,6 +348,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
         btnClienteAlta.setEnabled(false);
         btnClienteModificar.setEnabled(false);
         btnClienteBaja.setEnabled(false);
+        lblClienteBajaDesc.setEnabled(false);
+        lblClienteBaja.setText("");
         this.limpiarTabla();
         this.etapa = 0;
     }
@@ -364,7 +384,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
             case 0: {
                 message = "Debe ingresar al menos una opcion";
                 error = true;
-                JOptionPane.showConfirmDialog(this, message, "Buscar Cliente", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, message, "Buscar Cliente", JOptionPane.WARNING_MESSAGE);
             }
             break;
             //Validaciones para dar de alta un cliente
@@ -401,7 +421,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 }
 
                 if (error) {
-                    JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
                 }
             }
             break;
@@ -445,6 +465,10 @@ public class ClientesConsulta extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtClienteFaxActionPerformed
 
+    /**
+     * @param Evento
+     *  @see Se ejecutan todas las acciones del boton de cancelar Cliente
+     */
     private void btnClienteCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteCancelarActionPerformed
         Integer option;
         switch (this.etapa) {
@@ -482,7 +506,10 @@ public class ClientesConsulta extends javax.swing.JPanel {
             break;
         }
     }//GEN-LAST:event_btnClienteCancelarActionPerformed
-
+    /**
+     * @param Evento.
+     *  @see Se ejecutan todas las acciones del boton de Alta de Cliente
+     */
     private void btnClienteAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteAltaActionPerformed
         if (!this.validarEtapa()) {
             this.setTextEnObCliente();
@@ -505,7 +532,11 @@ public class ClientesConsulta extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_btnClienteAltaActionPerformed
-
+    /**
+     * @param evento
+     * @see Se ejecutan todas las acciones del boton de baja del cliente
+     * 
+     */
     private void btnClienteBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteBajaActionPerformed
         this.etapa = 3;
         int row = tblBusquedaCliente.getSelectedRow();
@@ -520,7 +551,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                     message = "Este Cliente ya esta dado de baja";
                     JOptionPane.showMessageDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    //Saco los datos de la fila seleccionada y lo paso a objeto
+                    //Saco los datos de la fila seleccionada y lo pasoModificar a objeto
                     cliente.setCuit(Long.parseLong(dtm.getValueAt(row, 0).toString()));
                     cliente.setNombre(dtm.getValueAt(row, 1).toString());
                     cliente.setDireccion(dtm.getValueAt(row, 2).toString());
@@ -546,6 +577,38 @@ public class ClientesConsulta extends javax.swing.JPanel {
 
     private void btnClienteModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteModificarActionPerformed
         this.etapa = 4;
+        int row = tblBusquedaCliente.getSelectedRow();
+        
+        if (this.pasoModificar == 1) {
+            if (row < 0) {
+                String message = "Debe seleccionar el cliente que desea modificar en la lista";
+                JOptionPane.showMessageDialog(this, message, "Modificar Cliente", JOptionPane.WARNING_MESSAGE);
+            } else {
+                String message = "Confirma Modificacion de cliente: " + dtm.getValueAt(row, 1) + "?";
+                int option = JOptionPane.showConfirmDialog(this, message, "Modificar Cliente", JOptionPane.WARNING_MESSAGE);
+                if (option == 0) {
+                    //Saco los datos de la fila seleccionada y lo pasoModificar a textbox
+                    lblClienteBajaDesc.setEnabled(true);
+                    txtClienteCuit.setText(dtm.getValueAt(row, 0).toString());
+                    txtClienteNombre.setText(dtm.getValueAt(row, 1).toString());
+                    txtClienteDireccion.setText(dtm.getValueAt(row, 2).toString());
+                    txtClienteCodPost.setText(dtm.getValueAt(row, 3).toString());
+                    txtClienteTelefono.setText(dtm.getValueAt(row, 4).toString());
+                    txtClienteFax.setText(dtm.getValueAt(row, 5).toString());
+                    lblClienteBaja.setText(dtm.getValueAt(row, 6).toString());
+                    lblClienteBaja.setText(dtm.getValueAt(row, 6).toString());
+                    this.pasoModificar = 2;
+
+                }
+
+            }
+        } else {
+            this.setTextEnObCliente();
+            ProcesarClientes procCli = new ProcesarClientes();
+            procCli.modificarCliente(cliente);
+            this.setFormAlEstadoDeBusqueda();
+            this.pasoModificar = 1;
+        }
     }//GEN-LAST:event_btnClienteModificarActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClienteAlta;
@@ -567,6 +630,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lblClienteBaja;
+    private javax.swing.JLabel lblClienteBajaDesc;
     private javax.swing.JTable tblBusquedaCliente;
     private javax.swing.JTextField txtClienteCodPost;
     private javax.swing.JTextField txtClienteCuit;
