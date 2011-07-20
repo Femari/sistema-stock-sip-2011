@@ -19,7 +19,7 @@ public interface IProcesarClientes {
 
     public abstract void agregarCliente(Cliente cliente);
 
-    public abstract void modificarCliente(Cliente ClienteActual, Cliente ClienteModificado);
+    public abstract void modificarCliente(Cliente ClienteModificado);
     
     public abstract boolean existeCliente(Cliente cliente);
 }

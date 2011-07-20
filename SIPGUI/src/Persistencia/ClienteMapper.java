@@ -40,7 +40,7 @@ public class ClienteMapper {
         try {
 
             PreparedStatement updateCliente;
-            String sqlString = "UPDATE Cliente SET nombre = ? , direccion = ? , codigoPostal = ? , telefono = ? , fax = ? WHERE cuit = ?";
+            String sqlString = "UPDATE Cliente SET nombre = ? , direccion = ? , codigoPostal = ? , telefono = ? , fax = ? , Habilitado = ? WHERE cuit = ?";
             System.out.println(sqlString);
             updateCliente = ConexionManager.getInstancia().getConexion().prepareStatement(sqlString);
             MapearUpdatePreparedStatement(cliente, updateCliente);
@@ -95,13 +95,13 @@ public class ClienteMapper {
     static void MapearUpdatePreparedStatement(Cliente cliente, PreparedStatement preparedStatement) {
         try {
             
-            preparedStatement.setLong(1, cliente.getCuit());
-            preparedStatement.setString(2, cliente.getNombre());
-            preparedStatement.setString(3, cliente.getDireccion());
-            preparedStatement.setString(4, cliente.getCodigoPostal());
-            preparedStatement.setString(5, cliente.getTelefono());
-            preparedStatement.setString(6, cliente.getFax());
-            preparedStatement.setBoolean(7, cliente.getHabilitado());
+            preparedStatement.setString(1, cliente.getNombre());
+            preparedStatement.setString(2, cliente.getDireccion());
+            preparedStatement.setString(3, cliente.getCodigoPostal());
+            preparedStatement.setString(4, cliente.getTelefono());
+            preparedStatement.setString(5, cliente.getFax());
+            preparedStatement.setBoolean(6, cliente.getHabilitado());
+            preparedStatement.setLong(7, cliente.getCuit());
             preparedStatement.executeUpdate();
 
 

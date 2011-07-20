@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.6" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
   </Properties>
@@ -204,6 +204,9 @@
               <TableColumnModel selectionModel="0"/>
             </Property>
             <Property name="name" type="java.lang.String" value="jscroll" noResource="true"/>
+            <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+              <JTableSelectionModel selectionMode="0"/>
+            </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
@@ -250,6 +253,23 @@
             <Property name="name" type="java.lang.String" value="jSeparator2" noResource="true"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JButton" name="btnClienteBaja">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="btnClienteBaja.text"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="name" type="java.lang.String" value="btnClienteBaja" noResource="true"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClienteBajaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator5">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="jSeparator5" noResource="true"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JButton" name="btnClienteModificar">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="btnClienteModificar.text"/>
@@ -258,6 +278,9 @@
             <Property name="name" type="java.lang.String" value="btnClienteModificar" noResource="true"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClienteModificarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator3">
           <Properties>
