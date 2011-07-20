@@ -25,7 +25,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
 
     /** Creates new form MaterialesConsulta */
     private DefaultTableModel dtm;
-    private String[] columnas = {"Cuit", "Nombre", "Direccion", "Codigo Postal", "Telefono", "Fax","Dado de Baja"};
+    private String[] columnas = {"Cuit", "Nombre", "Direccion", "Codigo Postal", "Telefono", "Fax", "Dado de Baja"};
     private Cliente cliente;
 
     /*Indica la etapa en que esta la operacion
@@ -40,8 +40,8 @@ public class ClientesConsulta extends javax.swing.JPanel {
         dtm = new DefaultTableModel(columnas, 0);
         initComponents();
         btnClienteModificar.setEnabled(false);
-        //btnClienteAlta.setEnabled(false);
-        //btnClienteBaja.setEnabled(false);
+        btnClienteAlta.setEnabled(false);
+        btnClienteBaja.setEnabled(false);
     }
 
     /** This method is called from within the constructor to
@@ -263,7 +263,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,7 +292,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
                         client.getCodigoPostal(),
                         client.getTelefono(),
                         client.getFax(),
-                        (client.getHabilitado())?"No":"Si"
+                        (client.getHabilitado()) ? "No" : "Si"
                     });
         }
     }
@@ -327,6 +327,9 @@ public class ClientesConsulta extends javax.swing.JPanel {
         txtClienteFax.setText("");
         txtClienteNombre.setText("");
         txtClienteTelefono.setText("");
+        btnClienteAlta.setEnabled(false);
+        btnClienteModificar.setEnabled(false);
+        btnClienteBaja.setEnabled(false);
         this.limpiarTabla();
         this.etapa = 0;
     }
@@ -342,14 +345,15 @@ public class ClientesConsulta extends javax.swing.JPanel {
         cliente.setFax(txtClienteFax.getText());
 
     }
-    
-    private void setFormAlEstadoDeBusqueda(){
-            this.etapa = 0;
-            this.limpiarCampos();
-            txtClienteCuit.setEditable(true);
-            txtClienteCuit.requestFocus();
-            btnClienteBuscar.setEnabled(true);
-            //btnClienteAlta.setEnabled(false);
+
+    private void setFormAlEstadoDeBusqueda() {
+        this.etapa = 0;
+        this.limpiarCampos();
+        txtClienteCuit.setEditable(true);
+        txtClienteCuit.requestFocus();
+        btnClienteBuscar.setEnabled(true);
+        btnClienteAlta.setEnabled(false);
+        btnClienteBaja.setEnabled(false);
     }
 
     private boolean validarEtapa() {
@@ -360,7 +364,7 @@ public class ClientesConsulta extends javax.swing.JPanel {
             case 0: {
                 message = "Debe ingresar al menos una opcion";
                 error = true;
-                JOptionPane.showConfirmDialog(this,message ,"Buscar Cliente", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showConfirmDialog(this, message, "Buscar Cliente", JOptionPane.WARNING_MESSAGE);
             }
             break;
             //Validaciones para dar de alta un cliente
@@ -370,32 +374,32 @@ public class ClientesConsulta extends javax.swing.JPanel {
                     message += "-El Cuit es un campo obligatorio.\n";
                     error = true;
                 }
-                
+
                 if (cliente.getNombre().isEmpty()) {
                     message += "-El Nombre es un campo obligatorio.\n";
                     error = true;
                 }
-                
+
                 if (cliente.getCodigoPostal().isEmpty()) {
                     message += "-El CP es un campo obligatorio.\n";
                     error = true;
                 }
-                
+
                 if (cliente.getDireccion().isEmpty()) {
                     message += "-La Direccion es un campo obligatorio.\n";
                     error = true;
                 }
-                
+
                 if (cliente.getTelefono().isEmpty()) {
                     message += "-El Telefono es un campo obligatorio.\n";
                     error = true;
                 }
-                
+
                 if (cliente.getFax().isEmpty()) {
                     message += "-El Fax es un campo obligatorio.\n";
                     error = true;
                 }
-                
+
                 if (error) {
                     JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
                 }
@@ -421,9 +425,12 @@ public class ClientesConsulta extends javax.swing.JPanel {
         } else {
             if (new ProcesarClientes().existeCliente(cliente)) {
                 this.setCompletarTabla(cliente);
+                btnClienteBaja.setEnabled(true);
+                btnClienteModificar.setEnabled(true);
+
             } else {
                 String message = "El cliente solicitado no existe. Quiere darlo de alta?";
-                option = JOptionPane.showConfirmDialog(this,message,"Clientes", JOptionPane.WARNING_MESSAGE);
+                option = JOptionPane.showConfirmDialog(this, message, "Clientes", JOptionPane.WARNING_MESSAGE);
                 //El sistema actua de acuerdo a la seleccion del usuario
                 if (option == 0) {
                     this.cargarNuevoCliente();
@@ -453,8 +460,9 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 String message = "Esta seguro que quiere cancelar el alta de este Cliente?";
                 option = JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
                 //El sistema actua de acuerdo a la seleccion del usuario
-                if (option == 0) 
+                if (option == 0) {
                     this.setFormAlEstadoDeBusqueda();
+                }
             }
             break;
             //Cancelar la baja
@@ -462,29 +470,26 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 String message = "Esta seguro que quiere cancelar la baja de este Cliente?";
                 option = JOptionPane.showConfirmDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
                 //El sistema actua de acuerdo a la seleccion del usuario
-                if (option == 0) 
+                if (option == 0) {
                     this.setFormAlEstadoDeBusqueda();
+                }
             }
             break;
-            //Cancelar la Modificacion
+            //Cancelar luego de la modificacion Modificacion
             case 3: {
-                String message = "Esta seguro que quiere cancelar la Modificacion de este Cliente?";
-                option = JOptionPane.showConfirmDialog(this, message, "Modificar Cliente", JOptionPane.WARNING_MESSAGE);
-                //El sistema actua de acuerdo a la seleccion del usuario
-                if (option == 0)
-                    this.setFormAlEstadoDeBusqueda();
+                this.setFormAlEstadoDeBusqueda();
             }
             break;
         }
     }//GEN-LAST:event_btnClienteCancelarActionPerformed
 
     private void btnClienteAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteAltaActionPerformed
-        if(!this.validarEtapa()){
+        if (!this.validarEtapa()) {
             this.setTextEnObCliente();
             ProcesarClientes proCli = new ProcesarClientes();
             proCli.agregarCliente(cliente);
-            if(proCli.existeCliente(cliente)){
-                String message = "El cliente "+cliente.getCuit()+" se dio de alta satisfactoriamente.";
+            if (proCli.existeCliente(cliente)) {
+                String message = "El cliente " + cliente.getCuit() + " se dio de alta satisfactoriamente.";
                 JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
                 btnClienteAlta.setEnabled(false);
                 btnClienteBuscar.setEnabled(true);
@@ -492,44 +497,56 @@ public class ClientesConsulta extends javax.swing.JPanel {
                 this.limpiarCampos();
                 this.limpiarTabla();
                 this.etapa = 0;
-            }else {
-                String message = "El cliente "+cliente.getCuit()+" no pudo darse de alta satisfactoriamente.";
+            } else {
+                String message = "El cliente " + cliente.getCuit() + " no pudo darse de alta satisfactoriamente.";
                 JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
             }
         }
-            
-        
+
+
     }//GEN-LAST:event_btnClienteAltaActionPerformed
 
     private void btnClienteBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteBajaActionPerformed
         this.etapa = 3;
         int row = tblBusquedaCliente.getSelectedRow();
-        String message = "Confirma Baja de cliente: "+dtm.getValueAt(row, 1)+"?";
-        int option = JOptionPane.showConfirmDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
-        if(option ==0){
-            //Saco los datos de la fila seleccionada y lo paso a objeto
-            cliente.setCuit(Long.parseLong(dtm.getValueAt(row, 0).toString()));
-            cliente.setNombre(dtm.getValueAt(row, 1).toString());
-            cliente.setDireccion(dtm.getValueAt(row, 2).toString());
-            cliente.setCodigoPostal(dtm.getValueAt(row, 3).toString());
-            cliente.setTelefono(dtm.getValueAt(row, 4).toString());
-            cliente.setFax(dtm.getValueAt(row, 5).toString());
-            if(dtm.getValueAt(row, 6).toString().equals("No"))
-                cliente.setHabilitado(true);
-            else
-                cliente.setHabilitado(false);
-            ProcesarClientes procCli = new ProcesarClientes();
-            procCli.bajaCliente(cliente);
-            
+        if (row < 0) {
+            String message = "Debe seleccionar el cliente que desea dar de baja en la lista";
+            JOptionPane.showMessageDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String message = "Confirma Baja de cliente: " + dtm.getValueAt(row, 1) + "?";
+            int option = JOptionPane.showConfirmDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
+            if (option == 0) {
+                if (dtm.getValueAt(row, 6).toString().equals("Si")) {
+                    message = "Este Cliente ya esta dado de baja";
+                    JOptionPane.showMessageDialog(this, message, "Baja Cliente", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    //Saco los datos de la fila seleccionada y lo paso a objeto
+                    cliente.setCuit(Long.parseLong(dtm.getValueAt(row, 0).toString()));
+                    cliente.setNombre(dtm.getValueAt(row, 1).toString());
+                    cliente.setDireccion(dtm.getValueAt(row, 2).toString());
+                    cliente.setCodigoPostal(dtm.getValueAt(row, 3).toString());
+                    cliente.setTelefono(dtm.getValueAt(row, 4).toString());
+                    cliente.setFax(dtm.getValueAt(row, 5).toString());
+                    if (dtm.getValueAt(row, 6).toString().equals("No")) {
+                        cliente.setHabilitado(true);
+                    } else {
+                        cliente.setHabilitado(false);
+                    }
+                    ProcesarClientes procCli = new ProcesarClientes();
+                    procCli.bajaCliente(cliente);
+                    this.setFormAlEstadoDeBusqueda();
+                }
+
+            }
+
+
         }
-            System.out.println("selecciono la:"+cliente.getCuit());
-        
+
     }//GEN-LAST:event_btnClienteBajaActionPerformed
 
     private void btnClienteModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteModificarActionPerformed
         this.etapa = 4;
     }//GEN-LAST:event_btnClienteModificarActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClienteAlta;
     private javax.swing.JButton btnClienteBaja;
