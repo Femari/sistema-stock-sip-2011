@@ -447,6 +447,12 @@ public class ClientesConsulta extends javax.swing.JPanel {
             if(proCli.existeCliente(cliente)){
                 String message = "El cliente "+cliente.getCuit()+" se dio de alta satisfactoriamente.";
                 JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
+                btnClienteAlta.setEnabled(false);
+                btnClienteBuscar.setEnabled(true);
+                cliente = new Cliente();
+                this.limpiarCampos();
+                this.limpiarTabla();
+                this.etapa = 0;
             }else {
                 String message = "El cliente "+cliente.getCuit()+" no pudo darse de alta satisfactoriamente.";
                 JOptionPane.showConfirmDialog(this, message, "Alta Cliente", JOptionPane.WARNING_MESSAGE);
